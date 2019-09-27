@@ -8,7 +8,8 @@ RUN apk add --no-cache --virtual .build-deps \
     libtool \
     libxml2-dev \
     postgresql-dev \
-    sqlite-dev
+    sqlite-dev \
+    icu-dev
 
 # Install production dependencies
 RUN apk add --no-cache \
@@ -55,7 +56,8 @@ RUN docker-php-ext-install \
     gd \
     zip \
     bcmath \
-    exif
+    exif \
+    intl
 
 # Install composer
 ENV COMPOSER_HOME /composer
