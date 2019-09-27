@@ -56,7 +56,7 @@ RUN docker-php-ext-install \
     gd \
     zip \
     bcmath \
-    exif \\
+    exif \
     intl
 
 # Install composer
