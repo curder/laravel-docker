@@ -41,7 +41,7 @@ RUN pecl install \
 RUN docker-php-ext-enable \
     imagick \
     xdebug
-RUN docker-php-ext-configure zip --with-libzip
+RUN docker-php-ext-configure zip --with-libzip intl
 RUN docker-php-ext-install \
     curl \
     iconv \
