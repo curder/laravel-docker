@@ -14,12 +14,17 @@ RUN apk add --no-cache --virtual .build-deps \
 RUN apk add --no-cache \
     bash \
     curl \
+    freetype-dev \
     g++ \
     gcc \
     git \
+    icu-dev \
+    icu-libs \
     imagemagick \
     libc-dev \
+    libjpeg-turbo-dev \
     libpng-dev \
+    libzip-dev \
     make \
     mysql-client \
     nodejs \
@@ -28,24 +33,34 @@ RUN apk add --no-cache \
     openssh-client \
     postgresql-libs \
     rsync \
-    zlib-dev \
-    libzip-dev \
-    icu-dev
+    zlib-dev
 
 # Install PECL and PEAR extensions
 RUN pecl install \
+    redis \
     imagick \
-    xdebug
+    xdebug-2.5.0
 
 # Install and enable php extensions
 RUN docker-php-ext-enable \
+    redis \
     imagick \
     xdebug
-RUN docker-php-ext-configure zip --with-libzip
-RUN docker-php-ext-configure intl
+
+# Configure php extensions
+RUN docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/ \
+    && docker-php-ext-configure zip --with-libzip \
+    && docker-php-ext-configure intl
+
+# Install php extensions
 RUN docker-php-ext-install \
+    bcmath \
+    calendar \
     curl \
+    exif \
+    gd \
     iconv \
+    intl \
     mbstring \
     pdo \
     pdo_mysql \
@@ -54,17 +69,13 @@ RUN docker-php-ext-install \
     pcntl \
     tokenizer \
     xml \
-    gd \
-    zip \
-    bcmath \
-    exif \
-    intl
+    zip
 
 # Install composer
 ENV COMPOSER_HOME /composer
 ENV PATH ./vendor/bin:/composer/vendor/bin:$PATH
 ENV COMPOSER_ALLOW_SUPERUSER 1
-RUN curl -s https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin/ --filename=composer
+RUN curl -s https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin/ --filename=composer --version=1.10.18
 
 # set composer mirrors
 RUN composer config -g repos.packagist composer https://mirrors.aliyun.com/composer
