@@ -1,16 +1,10 @@
 FROM php:7.1-alpine
 
-# Install dev dependencies
-RUN apk add --no-cache --virtual .build-deps \
-    $PHPIZE_DEPS \
-    curl-dev \
-    imagemagick-dev \
-    libtool \
-    libxml2-dev \
-    postgresql-dev \
-    sqlite-dev
 
-# Install production dependencies
+# Add docker-php-extension-installer script
+ADD https://github.com/mlocati/docker-php-extension-installer/releases/latest/download/install-php-extensions /usr/local/bin/
+
+# Install dependencies
 RUN apk add --no-cache \
     bash \
     curl \
@@ -20,71 +14,42 @@ RUN apk add --no-cache \
     git \
     icu-dev \
     icu-libs \
-    imagemagick \
     libc-dev \
-    libjpeg-turbo-dev \
-    libpng-dev \
     libzip-dev \
     make \
     mysql-client \
     nodejs \
-    nodejs-npm \
+    npm \
+    oniguruma-dev \
     yarn \
     openssh-client \
     postgresql-libs \
     rsync \
     zlib-dev
 
-# Install PECL and PEAR extensions
-RUN pecl install \
-    redis \
-    imagick \
-    xdebug-2.5.0
-
-# Install and enable php extensions
-RUN docker-php-ext-enable \
-    redis \
-    imagick \
-    xdebug
-
-# Configure php extensions
-RUN docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/ \
-    && docker-php-ext-configure zip --with-libzip \
-    && docker-php-ext-configure intl
-
 # Install php extensions
-RUN docker-php-ext-install \
+RUN chmod +x /usr/local/bin/install-php-extensions && \
+    install-php-extensions \
+    @composer \
+    redis-stable \
+    imagick-stable \
+    xdebug \
     bcmath \
     calendar \
-    curl \
     exif \
     gd \
-    iconv \
     intl \
-    mbstring \
-    pdo \
     pdo_mysql \
     pdo_pgsql \
-    pdo_sqlite \
     pcntl \
-    tokenizer \
-    xml \
+    soap \
     zip
 
-# Install composer
-ENV COMPOSER_HOME /composer
-ENV PATH ./vendor/bin:/composer/vendor/bin:$PATH
-ENV COMPOSER_ALLOW_SUPERUSER 1
-RUN curl -s https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin/ --filename=composer --version=1.10.18
-
-# set composer mirrors
-RUN composer config -g repos.packagist composer https://mirrors.aliyun.com/composer
+# Add local and global vendor bin to PATH.
+ENV PATH ./vendor/bin:/composer/vendor/bin:/root/.composer/vendor/bin:/usr/local/bin:$PATH
 
 # Install PHP_CodeSniffer
 RUN composer global require "squizlabs/php_codesniffer=*"
-
-# Cleanup dev dependencies
-RUN apk del -f .build-deps
 
 # Setup working directory
 WORKDIR /var/www
