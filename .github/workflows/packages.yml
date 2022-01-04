@@ -31,7 +31,8 @@ jobs:
             php: '7.2'
           - tag: '7.1'
             php: '7.1'
-
+          - tag: '5.6'
+            php: '5.6'
     steps:
       - uses: actions/checkout@v2
 
