@@ -9,6 +9,14 @@ updates:
         update-types: [ "version-update:semver-major" ]
 
   - package-ecosystem: "docker"
+    directory: "/7.0"
+    schedule:
+      interval: "daily"
+    ignore:
+      - dependency-name: "*"
+        update-types: [ "version-update:semver-major" ]
+
+  - package-ecosystem: "docker"
     directory: "/7.1"
     schedule:
       interval: "daily"
