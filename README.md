@@ -11,7 +11,7 @@
 | 7.2.34 | 7.2.34 | ✅ Everything |
 | 7.3.33 | 7.3.33 | ✅ Everything |
 | 7.4.29 | 7.4.29 | ✅ Everything |
-| 8.0.17 | 8.0.17 | ✅ Everything |
+| 8.0.18 | 8.0.18 | ✅ Everything |
 | 8.1.5  | 8.1.5  | ✅ Everything |
 | stable | **7.4** | 🔗 Aliases the stable version of PHP that supports all features of this docker image.  |
 | latest | **7.4** | 🔗 Aliases the latest version of PHP available (even if that version does not support all features yet). |

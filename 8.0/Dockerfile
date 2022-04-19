@@ -1,4 +1,4 @@
-FROM php:8.0.17-alpine
+FROM php:8.0.18-alpine
 
 # Add docker-php-extension-installer script
 ADD https://github.com/mlocati/docker-php-extension-installer/releases/latest/download/install-php-extensions /usr/local/bin/
