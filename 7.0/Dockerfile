@@ -1,4 +1,4 @@
-FROM php:7.0-alpine
+FROM php:7.0.33-alpine
 
 
 # Add docker-php-extension-installer script
