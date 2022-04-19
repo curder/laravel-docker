@@ -8,7 +8,7 @@
 | 5.6.40 | 5.6.40 | ✅ Everything |
 | 7.0.33 | 7.0.33 | ✅ Everything |
 | 7.1.33 | 7.1.33 | ✅ Everything |
-| 7.2 | 7.2 | ✅ Everything |
+| 7.2.34 | 7.2.34 | ✅ Everything |
 | 7.3 | 7.3 | ✅ Everything |
 | 7.4 | 7.4 | ✅ Everything |
 | 8.0 | 8.0 | ✅ Everything |
