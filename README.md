@@ -10,7 +10,7 @@
 | 7.1.33 | 7.1.33 | ✅ Everything |
 | 7.2.34 | 7.2.34 | ✅ Everything |
 | 7.3.33 | 7.3.33 | ✅ Everything |
-| 7.4.29 | 7.4.29 | ✅ Everything |
+| 7.4.30 | 7.4.30 | ✅ Everything |
 | 8.0.19 | 8.0.19 | ✅ Everything |
 | 8.1.6  | 8.1.6  | ✅ Everything |
 | stable | **7.4** | 🔗 Aliases the stable version of PHP that supports all features of this docker image.  |
