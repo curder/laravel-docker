@@ -11,7 +11,7 @@
 | 7.2.34 | 7.2.34 | ✅ Everything |
 | 7.3.33 | 7.3.33 | ✅ Everything |
 | 7.4.30 | 7.4.30 | ✅ Everything |
-| 8.0.22 | 8.0.22 | ✅ Everything |
+| 8.0.23 | 8.0.23 | ✅ Everything |
 | 8.1.10  | 8.1.10  | ✅ Everything |
 | 8.2.0beta2  | 8.2.0beta2  | 🚧 Waiting for `php:8.2.0-alpine`. Currently using `php:8.2.0-alpha2`. Extension `xdebug` missing. |
 | stable | **7.4** | 🔗 Aliases the stable version of PHP that supports all features of this docker image.  |
