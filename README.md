@@ -10,7 +10,7 @@
 | 7.1.33 | 7.1.33 | ✅ Everything |
 | 7.2.34 | 7.2.34 | ✅ Everything |
 | 7.3.33 | 7.3.33 | ✅ Everything |
-| 7.4.30 | 7.4.30 | ✅ Everything |
+| 7.4.32 | 7.4.32 | ✅ Everything |
 | 8.0.23 | 8.0.23 | ✅ Everything |
 | 8.1.10  | 8.1.10  | ✅ Everything |
 | 8.2.0rc1  | 8.2.0rc1  | 🚧 Waiting for `php:8.2.0-alpine`. Currently using `php:8.2.0RC1-alpine3.16`. Extension `xdebug` missing. |
