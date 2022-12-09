@@ -23,7 +23,7 @@
 ## Usage
 
 ```bash
-docker run --rm curder/laravel-docker:8.1.13 php -v
+docker run --rm curder/laravel-docker:8.2.0 php -v
 ```
 
 #### Use within your GitLab's pipelines.
