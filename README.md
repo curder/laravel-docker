@@ -11,7 +11,7 @@
 | 7.1.33    | 7.1.33      | ✅ Everything                                                                                             |
 | 7.2.34    | 7.2.34      | ✅ Everything                                                                                             |
 | 7.3.33    | 7.3.33      | ✅ Everything                                                                                             |
-| 7.4.32    | 7.4.32      | ✅ Everything                                                                                             |
+| 7.4.33    | 7.4.33      | ✅ Everything                                                                                             |
 | 8.0.26    | 8.0.26      | ✅ Everything                                                                                             |
 | 8.1.14rc1 | 8.1.14rc1   | ✅ Everything                                                                                             |
 | 8.2.1rc1  | 8.2.1rc1    | ✅ Everything                                                                                             |
