@@ -15,8 +15,8 @@
 | 8.0.26    | 8.0.26      | ✅ Everything                                                                                             |
 | 8.1.14rc1 | 8.1.14rc1   | ✅ Everything                                                                                             |
 | 8.2.1rc1  | 8.2.1rc1    | ✅ Everything                                                                                             |
-| stable    | **7.4**     | 🔗 Aliases the stable version of PHP that supports all features of this docker image.                    |
-| latest    | **7.4**     | 🔗 Aliases the latest version of PHP available (even if that version does not support all features yet). |                            
+| stable    | **8.2**     | 🔗 Aliases the stable version of PHP that supports all features of this docker image.                    |
+| latest    | **8.2**     | 🔗 Aliases the latest version of PHP available (even if that version does not support all features yet). |                            
 
 > All PHP images use composer version 2, if you want to use version 1, please run `composer self-update --1` command.
 
