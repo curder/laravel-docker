@@ -1,4 +1,4 @@
-FROM amd64/php:7.4.33-alpine
+FROM php:7.4.33-alpine
 
 # Add docker-php-extension-installer script
 ADD https://github.com/mlocati/docker-php-extension-installer/releases/latest/download/install-php-extensions /usr/local/bin/
