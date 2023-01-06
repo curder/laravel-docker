@@ -1,4 +1,4 @@
-FROM php:5.6.40-alpine
+FROM amd64/php:5.6.40-alpine
 
 
 # Add docker-php-extension-installer script
