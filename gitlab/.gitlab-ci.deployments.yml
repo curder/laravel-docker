@@ -1,4 +1,4 @@
-image: lorisleiva/laravel-docker:latest
+image: curder/laravel-docker:latest
 
 .init_ssh: &init_ssh |
   eval $(ssh-agent -s)
