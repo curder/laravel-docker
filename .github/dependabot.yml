@@ -1,79 +1,60 @@
+---
+schedule: &schedule
+  schedule:
+    interval: "daily"
+
+ignore: &ignore
+  ignore:
+    - dependency-name: "*"
+      update-types: ["version-update:semver-major"]
+
 version: 2
 updates:
   - package-ecosystem: "docker"
     directory: "/5.6"
-    schedule:
-      interval: "daily"
-    ignore:
-      - dependency-name: "*"
-        update-types: [ "version-update:semver-major" ]
+    <<: *schedule
+    <<: *ignore
 
   - package-ecosystem: "docker"
     directory: "/7.0"
-    schedule:
-      interval: "daily"
-    ignore:
-      - dependency-name: "*"
-        update-types: [ "version-update:semver-major" ]
+    <<: *schedule
+    <<: *ignore
 
   - package-ecosystem: "docker"
     directory: "/7.1"
-    schedule:
-      interval: "daily"
-    ignore:
-      - dependency-name: "*"
-        update-types: [ "version-update:semver-major" ]
+    <<: *schedule
+    <<: *ignore
 
   - package-ecosystem: "docker"
     directory: "/7.2"
-    schedule:
-      interval: "daily"
-    ignore:
-      - dependency-name: "*"
-        update-types: ["version-update:semver-major"]
+    <<: *schedule
+    <<: *ignore
 
   - package-ecosystem: "docker"
     directory: "/7.3"
-    schedule:
-      interval: "daily"
-    ignore:
-      - dependency-name: "*"
-        update-types: ["version-update:semver-major"]
+    <<: *schedule
+    <<: *ignore
 
   - package-ecosystem: "docker"
     directory: "/7.4"
-    schedule:
-      interval: "daily"
-    ignore:
-      - dependency-name: "*"
-        update-types: ["version-update:semver-major"]
+    <<: *schedule
+    <<: *ignore
 
   - package-ecosystem: "docker"
     directory: "/8.0"
-    schedule:
-      interval: "daily"
-    ignore:
-      - dependency-name: "*"
-        update-types: ["version-update:semver-major"]
+    <<: *schedule
+    <<: *ignore
 
   - package-ecosystem: "docker"
     directory: "/8.1"
-    schedule:
-      interval: "daily"
-    ignore:
-      - dependency-name: "*"
-        update-types: ["version-update:semver-major"]
+    <<: *schedule
+    <<: *ignore
 
   - package-ecosystem: "docker"
     directory: "/8.2"
-    schedule:
-      interval: "daily"
-    ignore:
-      - dependency-name: "*"
-        update-types: ["version-update:semver-major"]
-
+    <<: *schedule
+    <<: *ignore
 
   - package-ecosystem: "github-actions"
     directory: "/"
-    schedule:
-      interval: "daily"
+    <<: *schedule
