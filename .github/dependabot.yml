@@ -3,7 +3,8 @@ schedule: &schedule
   schedule:
     interval: "daily"
 
-ignore: &ignore
+schedule_group: &schedule_group
+  <<: *schedule
   ignore:
     - dependency-name: "*"
       update-types: ["version-update:semver-major"]
@@ -12,48 +13,39 @@ version: 2
 updates:
   - package-ecosystem: "docker"
     directory: "/5.6"
-    <<: *schedule
-    <<: *ignore
+    <<: *schedule_group
 
   - package-ecosystem: "docker"
     directory: "/7.0"
-    <<: *schedule
-    <<: *ignore
+    <<: *schedule_group
 
   - package-ecosystem: "docker"
     directory: "/7.1"
-    <<: *schedule
-    <<: *ignore
+    <<: *schedule_group
 
   - package-ecosystem: "docker"
     directory: "/7.2"
-    <<: *schedule
-    <<: *ignore
+    <<: *schedule_group
 
   - package-ecosystem: "docker"
     directory: "/7.3"
-    <<: *schedule
-    <<: *ignore
+    <<: *schedule_group
 
   - package-ecosystem: "docker"
     directory: "/7.4"
-    <<: *schedule
-    <<: *ignore
+    <<: *schedule_group
 
   - package-ecosystem: "docker"
     directory: "/8.0"
-    <<: *schedule
-    <<: *ignore
+    <<: *schedule_group
 
   - package-ecosystem: "docker"
     directory: "/8.1"
-    <<: *schedule
-    <<: *ignore
+    <<: *schedule_group
 
   - package-ecosystem: "docker"
     directory: "/8.2"
-    <<: *schedule
-    <<: *ignore
+    <<: *schedule_group
 
   - package-ecosystem: "github-actions"
     directory: "/"
