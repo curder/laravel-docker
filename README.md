@@ -16,7 +16,7 @@
 | 7.4.33   | 7.4.33      | ✅ Everything                                                                                                        |
 | 8.0.30   | 8.0.30      | ✅ Everything                                                                                                        |
 | 8.1.23   | 8.1.23      | ✅ Everything                                                                                                        |
-| 8.2.10   | 8.2.10      | ✅ Everything                                                                                                        |
+| 8.2.11   | 8.2.11      | ✅ Everything                                                                                                        |
 | 8.3.0rc1 | 8.3 RC1     | 🚧 Waiting for `php:8.3.0-alpine`. Currently using `php:8.3.0RC1-alpine`. Extension `imagick` and `xdebug` missing. |
 | stable   | **8.2**     | 🔗 Aliases the stable version of PHP that supports all features of this docker image.                               |
 | latest   | **8.2**     | 🔗 Aliases the latest version of PHP available (even if that version does not support all features yet).            |                            
@@ -26,7 +26,7 @@
 ## Usage
 
 ```bash
-docker run --rm curder/laravel-docker:8.2.10 php -v
+docker run --rm curder/laravel-docker:8.2.11 php -v
 ```
 
 #### Use within your GitLab's pipelines.
