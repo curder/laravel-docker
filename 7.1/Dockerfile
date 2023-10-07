@@ -30,7 +30,7 @@ RUN apk add --no-cache \
 RUN chmod +x /usr/local/bin/install-php-extensions && \
     install-php-extensions \
     @composer \
-    redis-stable \
+    redis \
     imagick-stable \
     xdebug \
     bcmath \
