@@ -17,7 +17,7 @@
 | 8.0.30    | 8.0.30      | ✅ Everything                                                                                             |
 | 8.1.27 | 8.1.27   | ✅ Everything                                                                                             |
 | 8.2.14 | 8.2.14   | ✅ Everything                                                                                             |
-| 8.3.0     | 8.3.0       | 🚧 Extension `imagick`  missing.                                                                         |
+| 8.3.1     | 8.3.1       | 🚧 Extension `imagick`  missing.                                                                         |
 | stable    | **8.2**     | 🔗 Aliases the stable version of PHP that supports all features of this docker image.                    |
 | latest    | **8.2**     | 🔗 Aliases the latest version of PHP available (even if that version does not support all features yet). |                            
 
@@ -26,7 +26,7 @@
 ## Usage
 
 ```bash
-docker run --rm curder/laravel-docker:8.2.12 php -v
+docker run --rm curder/laravel-docker:8.2.14 php -v
 ```
 
 #### Use within your GitLab's pipelines.
