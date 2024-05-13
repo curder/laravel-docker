@@ -16,17 +16,17 @@
 | 7.4.33 | 7.4.33      | ✅ Everything                                                                                             |
 | 8.0.30 | 8.0.30      | ✅ Everything                                                                                             |
 | 8.1.28 | 8.1.28      | ✅ Everything                                                                                             |
-| 8.2.18 | 8.2.18      | ✅ Everything                                                                                             |
+| 8.2.19 | 8.2.19      | ✅ Everything                                                                                             |
 | 8.3.6  | 8.3.6       | ✅ Everything                                                                                             |
-| stable | **8.2**     | 🔗 Aliases the stable version of PHP that supports all features of this docker image.                    |
-| latest | **8.2**     | 🔗 Aliases the latest version of PHP available (even if that version does not support all features yet). |                            
+| stable | **8.3**     | 🔗 Aliases the stable version of PHP that supports all features of this docker image.                    |
+| latest | **8.3**     | 🔗 Aliases the latest version of PHP available (even if that version does not support all features yet). |                            
 
 > All PHP images use composer version 2, if you want to use version 1, please run `composer self-update --1` command.
 
 ## Usage
 
 ```bash
-docker run --rm curder/laravel-docker:8.2.18 php -v
+docker run --rm curder/laravel-docker:8.2.19 php -v
 ```
 
 #### Use within your GitLab's pipelines.
