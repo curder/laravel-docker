@@ -15,7 +15,7 @@
 | 7.3.33 | 7.3.33      | ✅ Everything                                                                                             |
 | 7.4.33 | 7.4.33      | ✅ Everything                                                                                             |
 | 8.0.30 | 8.0.30      | ✅ Everything                                                                                             |
-| 8.1.28 | 8.1.28      | ✅ Everything                                                                                             |
+| 8.1.29 | 8.1.29      | ✅ Everything                                                                                             |
 | 8.2.20 | 8.2.20      | ✅ Everything                                                                                             |
 | 8.3.8  | 8.3.8       | ✅ Everything                                                                                             |
 | stable | **8.3**     | 🔗 Aliases the stable version of PHP that supports all features of this docker image.                    |
@@ -26,7 +26,7 @@
 ## Usage
 
 ```bash
-docker run --rm curder/laravel-docker:8.2.19 php -v
+docker run --rm curder/laravel-docker:8.2.20 php -v
 ```
 
 #### Use within your GitLab's pipelines.
