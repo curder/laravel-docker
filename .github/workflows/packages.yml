@@ -23,7 +23,7 @@ jobs:
             php: '8.3'
           - tag: '8.4.0alpha4'
             platforms: linux/386,linux/amd64,linux/arm/v6,linux/arm/v7,linux/arm64/v8
-            php: '8.4'
+            php: '8.4-rc'
           - tag: '8.3.10'
             platforms: linux/386,linux/amd64,linux/arm/v6,linux/arm/v7,linux/arm64/v8
             php: '8.3'
