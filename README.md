@@ -30,6 +30,8 @@
 docker run --rm curder/laravel-docker:8.2.22 php -v
 ```
 
+For Apple Silicon or other arm-based CPUs, use the `--platform linux/arm64` option.
+
 #### Use within your GitLab's pipelines.
 
 * [Run test suite and check codestyle](http://lorisleiva.com/using-gitlabs-pipeline-with-laravel/)
