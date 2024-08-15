@@ -16,37 +16,26 @@ jobs:
       matrix:
         include:
           - tag: 'latest'
-            platforms: linux/386,linux/amd64,linux/arm/v6,linux/arm/v7,linux/arm64/v8
             php: '8.3'
           - tag: 'stable'
-            platforms: linux/386,linux/amd64,linux/arm/v6,linux/arm/v7,linux/arm64/v8
             php: '8.3'
           - tag: '8.4.0alpha4'
-            platforms: linux/386,linux/amd64,linux/arm/v6,linux/arm/v7,linux/arm64/v8
             php: '8.4-rc'
           - tag: '8.3.10'
-            platforms: linux/386,linux/amd64,linux/arm/v6,linux/arm/v7,linux/arm64/v8
             php: '8.3'
           - tag: '8.2.22'
-            platforms: linux/386,linux/amd64,linux/arm/v6,linux/arm/v7,linux/arm64/v8
             php: '8.2'
           - tag: '8.1.29'
-            platforms: linux/386,linux/amd64,linux/arm/v6,linux/arm/v7,linux/arm64/v8
             php: '8.1'
           - tag: '8.0.30'
-            platforms: linux/386,linux/amd64,linux/arm/v6,linux/arm/v7,linux/arm64/v8
             php: 'eol/8.0'
           - tag: '7.4.33'
-            platforms: linux/386,linux/amd64,linux/arm/v6,linux/arm/v7,linux/arm64/v8
             php: 'eol/7.4'
           - tag: '7.3.33'
-            platforms: linux/386,linux/amd64,linux/arm/v6,linux/arm/v7,linux/arm64/v8
             php: 'eol/7.3'
           - tag: '7.2.34'
-            platforms: linux/386,linux/amd64,linux/arm/v6,linux/arm/v7,linux/arm64/v8
             php: 'eol/7.2'
           - tag: '7.1.33'
-            platforms: linux/386,linux/amd64,linux/arm/v6,linux/arm/v7,linux/arm64/v8
             php: 'eol/7.1'
 
     steps:
@@ -79,7 +68,7 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           push: true
-          platforms: ${{ matrix.platforms }}
+          platforms: linux/386,linux/amd64,linux/arm/v6,linux/arm/v7,linux/arm64/v8
           context: ${{ matrix.php }}
           tags: |
             ghcr.io/${{ env.IMAGE }}:${{ matrix.tag }}
