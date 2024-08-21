@@ -6,28 +6,28 @@
 
 [![Docker Badge](https://img.shields.io/docker/pulls/curder/laravel-docker)](https://hub.docker.com/r/curder/laravel-docker/)
 
-| Tags        | PHP version  | Features                                                                                                               |
-|-------------|--------------|------------------------------------------------------------------------------------------------------------------------|
-| 5.6.40      | 5.6.40       | ✅ Everything                                                                                                           |
-| 7.0.33      | 7.0.33       | ✅ Everything                                                                                                           |
-| 7.1.33      | 7.1.33       | ✅ Everything                                                                                                           |
-| 7.2.34      | 7.2.34       | ✅ Everything                                                                                                           |
-| 7.3.33      | 7.3.33       | ✅ Everything                                                                                                           |
-| 7.4.33      | 7.4.33       | ✅ Everything                                                                                                           |
-| 8.0.30      | 8.0.30       | ✅ Everything                                                                                                           |
-| 8.1.29      | 8.1.29       | ✅ Everything                                                                                                           |
-| 8.2.22      | 8.2.22       | ✅ Everything                                                                                                           |
-| 8.3.10      | 8.3.10       | ✅ Everything                                                                                                           |
-| 8.4.0alpha4 | 8.4.0 Alpha4 | 🚧 Waiting for `php:8.4.0-alpine`. Currently using `php:8.4.0alpha4-alpine`. Extension `imagick` and `xdebug` missing. |
-| stable      | **8.3**      | 🔗 Aliases the stable version of PHP that supports all features of this docker image.                                  |
-| latest      | **8.3**      | 🔗 Aliases the latest version of PHP available (even if that version does not support all features yet).               |                            
+| Tags       | PHP version | Features                                                                                                              |
+|------------|-------------|-----------------------------------------------------------------------------------------------------------------------|
+| 5.6.40     | 5.6.40      | ✅ Everything                                                                                                          |
+| 7.0.33     | 7.0.33      | ✅ Everything                                                                                                          |
+| 7.1.33     | 7.1.33      | ✅ Everything                                                                                                          |
+| 7.2.34     | 7.2.34      | ✅ Everything                                                                                                          |
+| 7.3.33     | 7.3.33      | ✅ Everything                                                                                                          |
+| 7.4.33     | 7.4.33      | ✅ Everything                                                                                                          |
+| 8.0.30     | 8.0.30      | ✅ Everything                                                                                                          |
+| 8.1.29     | 8.1.29      | ✅ Everything                                                                                                          |
+| 8.2.22     | 8.2.22      | ✅ Everything                                                                                                          |
+| 8.3.10     | 8.3.10      | ✅ Everything                                                                                                          |
+| 8.4.0beta3 | 8.4.0 Beta3 | 🚧 Waiting for `php:8.4.0-alpine`. Currently using `php:8.4.0beta3-alpine`. Extension `imagick` and `xdebug` missing. |
+| stable     | **8.3**     | 🔗 Aliases the stable version of PHP that supports all features of this docker image.                                 |
+| latest     | **8.3**     | 🔗 Aliases the latest version of PHP available (even if that version does not support all features yet).              |                            
 
 > All PHP images use composer version 2, if you want to use version 1, please run `composer self-update --1` command.
 
 ## Usage
 
 ```bash
-docker run --rm curder/laravel-docker:8.2.22 php -v
+docker run --rm curder/laravel-docker:8.3.10 php -v
 ```
 
 For Apple Silicon or other arm-based CPUs, use the `--platform linux/arm64` option.
