@@ -80,5 +80,6 @@ jobs:
           tags: |
             ghcr.io/${{ env.IMAGE }}:${{ matrix.tag }}
             ${{ env.IMAGE }}:${{ matrix.tag }}
+            registry.cn-hangzhou.aliyuncs.com/${{ env.IMAGE }}:${{ matrix.tag }}
           cache-from: type=registry,ref=ghcr.io/${{ env.IMAGE }}:${{ matrix.tag }}
           cache-to: type=inline
