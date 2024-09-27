@@ -15,7 +15,7 @@
 | 7.3.33     | 7.3.33      | ✅ Everything                                                                                                          |
 | 7.4.33     | 7.4.33      | ✅ Everything                                                                                                          |
 | 8.0.30     | 8.0.30      | ✅ Everything                                                                                                          |
-| 8.1.29     | 8.1.29      | ✅ Everything                                                                                                          |
+| 8.1.30     | 8.1.30      | ✅ Everything                                                                                                          |
 | 8.2.23     | 8.2.23      | ✅ Everything                                                                                                          |
 | 8.3.11     | 8.3.11      | ✅ Everything                                                                                                          |
 | 8.4.0beta4 | 8.4.0 Beta4 | 🚧 Waiting for `php:8.4.0-alpine`. Currently using `php:8.4.0beta4-alpine`. Extension `imagick` and `xdebug` missing. |
