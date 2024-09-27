@@ -30,6 +30,21 @@
 docker run --rm curder/laravel-docker:8.3.12 php -v
 ```
 
+## Mirrors
+
+
+- GitHub Mirror
+
+    ```bash
+    docker run --rm ghcr.io/curder/laravel-docker:8.3.12 php -v
+    ```
+
+- Ali Mirror
+
+    ```bash
+    docker run --rm registry.cn-hangzhou.aliyuncs.com/curder/laravel-docker:8.3.12 php -v
+    ```
+
 For Apple Silicon or other arm-based CPUs, use the `--platform linux/arm64` option.
 
 #### Use within your GitLab's pipelines.
