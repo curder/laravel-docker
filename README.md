@@ -16,7 +16,7 @@
 | 7.4.33   | 7.4.33      | ✅ Everything                                                                                                        |
 | 8.0.30   | 8.0.30      | ✅ Everything                                                                                                        |
 | 8.1.30   | 8.1.30      | ✅ Everything                                                                                                        |
-| 8.2.24   | 8.2.24      | ✅ Everything                                                                                                        |
+| 8.2.25   | 8.2.25      | ✅ Everything                                                                                                        |
 | 8.3.13   | 8.3.13      | ✅ Everything                                                                                                        |
 | 8.4.0rc3 | 8.4.0 RC3   | 🚧 Waiting for `php:8.4.0-alpine`. Currently using `php:8.4.0RC3-alpine`. Extension `imagick` and `xdebug` missing. |
 | stable   | **8.3**     | 🔗 Aliases the stable version of PHP that supports all features of this docker image.                               |
