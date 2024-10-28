@@ -17,7 +17,7 @@
 | 8.0.30   | 8.0.30      | ✅ Everything                                                                                                        |
 | 8.1.30   | 8.1.30      | ✅ Everything                                                                                                        |
 | 8.2.24   | 8.2.24      | ✅ Everything                                                                                                        |
-| 8.3.12   | 8.3.12      | ✅ Everything                                                                                                        |
+| 8.3.13   | 8.3.13      | ✅ Everything                                                                                                        |
 | 8.4.0rc3 | 8.4.0 RC3   | 🚧 Waiting for `php:8.4.0-alpine`. Currently using `php:8.4.0RC3-alpine`. Extension `imagick` and `xdebug` missing. |
 | stable   | **8.3**     | 🔗 Aliases the stable version of PHP that supports all features of this docker image.                               |
 | latest   | **8.3**     | 🔗 Aliases the latest version of PHP available (even if that version does not support all features yet).            |                            
@@ -27,7 +27,7 @@
 ## Usage
 
 ```bash
-docker run --rm curder/laravel-docker:8.3.12 php -v
+docker run --rm curder/laravel-docker:8.3.13 php -v
 ```
 
 ## Mirrors
@@ -36,13 +36,13 @@ docker run --rm curder/laravel-docker:8.3.12 php -v
 - GitHub Mirror
 
     ```bash
-    docker run --rm ghcr.io/curder/laravel-docker:8.3.12 php -v
+    docker run --rm ghcr.io/curder/laravel-docker:8.3.13 php -v
     ```
 
 - Ali Mirror
 
     ```bash
-    docker run --rm registry.cn-hangzhou.aliyuncs.com/curder/laravel-docker:8.3.12 php -v
+    docker run --rm registry.cn-hangzhou.aliyuncs.com/curder/laravel-docker:8.3.13 php -v
     ```
 
 For Apple Silicon or other arm-based CPUs, use the `--platform linux/arm64` option.
