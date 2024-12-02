@@ -31,7 +31,7 @@ RUN chmod +x /usr/local/bin/install-php-extensions && \
     install-php-extensions \
     @composer \
     redis-stable \
-    Imagick/imagick@master \
+    Imagick/imagick@28f27044e435a2b203e32675e942eb8de620ee58 \
     xdebug-beta \
 #    xdebug-stable \
     bcmath \
