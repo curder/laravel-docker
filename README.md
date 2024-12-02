@@ -18,7 +18,7 @@
 | 8.1.31 | 8.1.31      | ✅ Everything                                                                                             |
 | 8.2.26 | 8.2.26      | ✅ Everything                                                                                             |
 | 8.3.14 | 8.3.14      | ✅ Everything                                                                                             |
-| 8.4.1  | 8.4.1       | ✅ Everything                                                                                             |
+| 8.4.1  | 8.4.1       | 🚧 Extension `imagick` missing.                                                                          |
 | stable | **8.3**     | 🔗 Aliases the stable version of PHP that supports all features of this docker image.                    |
 | latest | **8.3**     | 🔗 Aliases the latest version of PHP available (even if that version does not support all features yet). |                            
 
