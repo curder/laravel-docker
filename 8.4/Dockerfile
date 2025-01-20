@@ -31,9 +31,8 @@ RUN chmod +x /usr/local/bin/install-php-extensions && \
     install-php-extensions \
     @composer \
     redis-stable \
-    xdebug-beta \
-#    imagick-stable \
-#    xdebug-stable \
+    xdebug \
+    imagick \
     bcmath \
     calendar \
     exif \
