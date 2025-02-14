@@ -10,7 +10,7 @@
 |--------|-------------|:-------------|----------------------------------------------------------------------------------------------------------|
 | 8.1.31 | 8.1.31      | amd64/arm64  | ✅ Everything                                                                                             |
 | 8.2.27 | 8.2.27      | amd64/arm64  | ✅ Everything                                                                                             |
-| 8.3.16 | 8.3.16      | amd64/arm64  | ✅ Everything                                                                                             |
+| 8.3.17 | 8.3.17      | amd64/arm64  | ✅ Everything                                                                                             |
 | 8.4.4  | 8.4.4       | amd64/arm64  | ❌ Missing imagick extension                                                                              |
 | stable | **8.4**     | amd64/arm64  | 🔗 Aliases the stable version of PHP that supports all features of this docker image.                    |
 | latest | **8.4**     | amd64/arm64  | 🔗 Aliases the latest version of PHP available (even if that version does not support all features yet). |
