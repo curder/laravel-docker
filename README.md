@@ -8,7 +8,7 @@
 
 | Tags   | PHP version | Architecture | Features                                                                                                 |
 |--------|-------------|:-------------|----------------------------------------------------------------------------------------------------------|
-| 8.1.31 | 8.1.31      | amd64/arm64  | ✅ Everything                                                                                             |
+| 8.1.32 | 8.1.32      | amd64/arm64  | ✅ Everything                                                                                             |
 | 8.2.27 | 8.2.27      | amd64/arm64  | ✅ Everything                                                                                             |
 | 8.3.17 | 8.3.17      | amd64/arm64  | ✅ Everything                                                                                             |
 | 8.4.4  | 8.4.4       | amd64/arm64  | ❌ Missing imagick extension                                                                              |
