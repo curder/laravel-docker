@@ -32,7 +32,6 @@
 
 > All PHP images use composer version 2, if you want to use version 1, please run `composer self-update --1` command.
 
-
 ## Usage
 
 ```bash
@@ -55,7 +54,7 @@ docker run --rm curder/laravel-docker:8.4.4 php -v
 
 For Apple Silicon or other arm-based CPUs, use the `--platform linux/arm64` option.
 
-#### Use within your GitLab's pipelines.
+### Use within your GitLab's pipelines
 
-* [Run test suite and check code style](http://lorisleiva.com/using-gitlabs-pipeline-with-laravel/)
-* [Build, test and deploy your Laravel application](http://lorisleiva.com/laravel-deployment-using-gitlab-pipelines/)
+- [Run test suite and check code style](http://lorisleiva.com/using-gitlabs-pipeline-with-laravel/)
+- [Build, test and deploy your Laravel application](http://lorisleiva.com/laravel-deployment-using-gitlab-pipelines/)
