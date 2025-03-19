@@ -1,0 +1,14 @@
+{
+  "name": "laravel-docker",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "git@github.com:curder/laravel-docker.git",
+  "author": "curder <q.curder@gmail.com>",
+  "license": "MIT",
+  "scripts": {
+    "fix": "npx markdownlint-cli2 --config .markdownlint-cli2.yaml --fix"
+  },
+  "devDependencies": {
+    "markdownlint-cli2": "^0.17.2"
+  }
+}
