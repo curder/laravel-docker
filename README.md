@@ -6,14 +6,14 @@
 
 [![Docker Badge](https://img.shields.io/docker/pulls/curder/laravel-docker)](https://hub.docker.com/r/curder/laravel-docker/)
 
-| Tags     | PHP version | Architecture | Features                                                                                                 |
-|----------|-------------|:-------------|----------------------------------------------------------------------------------------------------------|
-| 8.1.32   | 8.1.32      | amd64/arm64  | ✅ Everything                                                                                             |
-| 8.2.28   | 8.2.28      | amd64/arm64  | ✅ Everything                                                                                             |
-| 8.3.22   | 8.3.22      | amd64/arm64  | ✅ Everything                                                                                             |
-| 8.4.8rc1 | 8.4.8rc1    | amd64/arm64  | ❌ Missing imagick extension                                                                              |
-| stable   | **8.4**     | amd64/arm64  | 🔗 Aliases the stable version of PHP that supports all features of this docker image.                    |
-| latest   | **8.4**     | amd64/arm64  | 🔗 Aliases the latest version of PHP available (even if that version does not support all features yet). |
+| Tags   | PHP version | Architecture | Features                                                                                                 |
+|--------|-------------|:-------------|----------------------------------------------------------------------------------------------------------|
+| 8.1.32 | 8.1.32      | amd64/arm64  | ✅ Everything                                                                                             |
+| 8.2.28 | 8.2.28      | amd64/arm64  | ✅ Everything                                                                                             |
+| 8.3.22 | 8.3.22      | amd64/arm64  | ✅ Everything                                                                                             |
+| 8.4.8  | 8.4.8       | amd64/arm64  | ❌ Missing imagick extension                                                                              |
+| stable | **8.4**     | amd64/arm64  | 🔗 Aliases the stable version of PHP that supports all features of this docker image.                    |
+| latest | **8.4**     | amd64/arm64  | 🔗 Aliases the latest version of PHP available (even if that version does not support all features yet). |
 
 <details>
 <summary>More EOL versions</summary>
@@ -35,7 +35,7 @@
 ## Usage
 
 ```bash
-docker run --rm curder/laravel-docker:8.4.7 php -v
+docker run --rm curder/laravel-docker:8.4.8 php -v
 ```
 
 ## Mirrors
@@ -43,13 +43,13 @@ docker run --rm curder/laravel-docker:8.4.7 php -v
 - GitHub Mirror
 
     ```bash
-    docker run --rm ghcr.io/curder/laravel-docker:8.4.7 php -v
+    docker run --rm ghcr.io/curder/laravel-docker:8.4.8 php -v
     ```
 
 - Ali Mirror
 
     ```bash
-    docker run --rm registry.cn-hangzhou.aliyuncs.com/curder/laravel-docker:8.4.7 php -v
+    docker run --rm registry.cn-hangzhou.aliyuncs.com/curder/laravel-docker:8.4.8 php -v
     ```
 
 For Apple Silicon or other arm-based CPUs, use the `--platform linux/arm64` option.
