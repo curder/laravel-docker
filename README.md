@@ -9,7 +9,7 @@
 | Tags      | PHP version | Architecture | Features                                                                                                 |
 |-----------|-------------|:-------------|----------------------------------------------------------------------------------------------------------|
 | 8.1.33    | 8.1.33      | amd64/arm64  | ✅ Everything                                                                                             |
-| 8.2.28    | 8.2.28      | amd64/arm64  | ✅ Everything                                                                                             |
+| 8.2.29    | 8.2.29      | amd64/arm64  | ✅ Everything                                                                                             |
 | 8.3.23rc1 | 8.3.23rc1   | amd64/arm64  | ✅ Everything                                                                                             |
 | 8.4.9rc1  | 8.4.9rc1    | amd64/arm64  | ❌ Missing imagick extension                                                                              |
 | stable    | **8.4**     | amd64/arm64  | 🔗 Aliases the stable version of PHP that supports all features of this docker image.                    |
