@@ -44,13 +44,13 @@ docker run --rm curder/laravel-docker:8.4.10 php -v
 - GitHub Mirror
 
     ```bash
-    docker run --rm ghcr.io/curder/laravel-docker:8.4.8 php -v
+    docker run --rm ghcr.io/curder/laravel-docker:8.4.10 php -v
     ```
 
 - Ali Mirror
 
     ```bash
-    docker run --rm registry.cn-hangzhou.aliyuncs.com/curder/laravel-docker:8.4.8 php -v
+    docker run --rm registry.cn-hangzhou.aliyuncs.com/curder/laravel-docker:8.4.10 php -v
     ```
 
 For Apple Silicon or other arm-based CPUs, use the `--platform linux/arm64` option.
