@@ -19,6 +19,8 @@ jobs:
             php: '8.4'
           - tag: 'stable'
             php: '8.4'
+          - tag: '8.5.0alpha1'
+            php: '8.5'
           - tag: '8.4.10'
             php: '8.4'
           - tag: '8.3.23'
