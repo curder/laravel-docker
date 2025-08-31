@@ -10,7 +10,7 @@
 |-------------|-------------|:-------------|----------------------------------------------------------------------------------------------------------|
 | 8.1.33      | 8.1.33      | amd64/arm64  | ✅ Everything                                                                                             |
 | 8.2.29      | 8.2.29      | amd64/arm64  | ✅ Everything                                                                                             |
-| 8.3.24      | 8.3.24      | amd64/arm64  | ✅ Everything                                                                                             |
+| 8.3.25      | 8.3.25      | amd64/arm64  | ✅ Everything                                                                                             |
 | 8.4.11      | 8.4.11      | amd64/arm64  | ✅ Everything                                                                                             |
 | 8.5.0alpha2 | 8.5.0alpha2 | amd64/arm64  | ❌ Missing xdebug extension                                                                               |
 | stable      | **8.4**     | amd64/arm64  | 🔗 Aliases the stable version of PHP that supports all features of this docker image.                    |
