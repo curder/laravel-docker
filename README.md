@@ -8,8 +8,6 @@
 
 | Tags   | PHP version | Architecture | Features                                                                                                 |
 |--------|-------------|:-------------|----------------------------------------------------------------------------------------------------------|
-| 8.1.33 | 8.1.33      | amd64/arm64  | ✅ Everything                                                                                             |
-| 8.2.29 | 8.2.29      | amd64/arm64  | ✅ Everything                                                                                             |
 | 8.3.28 | 8.3.28      | amd64/arm64  | ✅ Everything                                                                                             |
 | 8.5.0  | 8.5.0       | amd64/arm64  | ✅ Everything                                                                                             |
 | 8.5.0  | 8.5.0       | amd64/arm64  | ✅ Everything                                                                                             |
@@ -28,6 +26,8 @@
 | 7.3.33 | 7.3.33      | amd64/arm64  | ✅ Everything |
 | 7.4.33 | 7.4.33      | amd64/arm64  | ✅ Everything |
 | 8.0.30 | 8.0.30      | amd64/arm64  | ✅ Everything |
+| 8.1.33 | 8.1.33      | amd64/arm64  | ✅ Everything |
+| 8.2.29 | 8.2.29      | amd64/arm64  | ✅ Everything |
 
 </details>
 
