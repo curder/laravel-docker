@@ -19,7 +19,7 @@ jobs:
             php: '8.5'
           - tag: 'stable'
             php: '8.5'
-          - tag: '8.5.0'
+          - tag: '8.5.1'
             php: '8.5'
           - tag: '8.4.16'
             php: '8.4'
