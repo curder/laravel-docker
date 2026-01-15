@@ -6,13 +6,13 @@
 
 [![Docker Badge](https://img.shields.io/docker/pulls/curder/laravel-docker)](https://hub.docker.com/r/curder/laravel-docker/)
 
-| Tags   | PHP version | Architecture | Features                                                                                                 |
-|--------|-------------|:-------------|----------------------------------------------------------------------------------------------------------|
-| 8.3.29 | 8.3.29      | amd64/arm64  | ✅ Everything                                                                                             |
-| 8.4.16 | 8.4.16      | amd64/arm64  | ✅ Everything                                                                                             |
-| 8.5.1  | 8.5.1       | amd64/arm64  | ✅ Everything                                                                                             |
-| stable | **8.5**     | amd64/arm64  | 🔗 Aliases the stable version of PHP that supports all features of this docker image.                    |
-| latest | **8.5**     | amd64/arm64  | 🔗 Aliases the latest version of PHP available (even if that version does not support all features yet). |
+| Tags      | PHP version | Architecture | Features                                                                                                 |
+|-----------|-------------|:-------------|----------------------------------------------------------------------------------------------------------|
+| 8.3.30rc1 | 8.3.30rc1   | amd64/arm64  | ✅ Everything                                                                                             |
+| 8.4.17rc1 | 8.4.17rc1   | amd64/arm64  | ✅ Everything                                                                                             |
+| 8.5.2rc1  | 8.5.2rc1    | amd64/arm64  | ✅ Everything                                                                                             |
+| stable    | **8.5**     | amd64/arm64  | 🔗 Aliases the stable version of PHP that supports all features of this docker image.                    |
+| latest    | **8.5**     | amd64/arm64  | 🔗 Aliases the latest version of PHP available (even if that version does not support all features yet). |
 
 <details>
 <summary>More EOL versions</summary>
