@@ -10,7 +10,7 @@
 |--------|-------------|:-------------|----------------------------------------------------------------------------------------------------------|
 | 8.3.30 | 8.3.30      | amd64/arm64  | ✅ Everything                                                                                             |
 | 8.4.18 | 8.4.18      | amd64/arm64  | ✅ Everything                                                                                             |
-| 8.5.2  | 8.5.2       | amd64/arm64  | ✅ Everything                                                                                             |
+| 8.5.3  | 8.5.3       | amd64/arm64  | ✅ Everything                                                                                             |
 | stable | **8.5**     | amd64/arm64  | 🔗 Aliases the stable version of PHP that supports all features of this docker image.                    |
 | latest | **8.5**     | amd64/arm64  | 🔗 Aliases the latest version of PHP available (even if that version does not support all features yet). |
 
@@ -36,7 +36,7 @@
 ## Usage
 
 ```bash
-docker run --rm curder/laravel-docker:8.5.2 php -v
+docker run --rm curder/laravel-docker:8.5.3 php -v
 ```
 
 ## Mirrors
@@ -44,13 +44,13 @@ docker run --rm curder/laravel-docker:8.5.2 php -v
 - GitHub Mirror
 
     ```bash
-    docker run --rm ghcr.io/curder/laravel-docker:8.5.2 php -v
+    docker run --rm ghcr.io/curder/laravel-docker:8.5.3 php -v
     ```
 
 - Ali Mirror
 
     ```bash
-    docker run --rm registry.cn-hangzhou.aliyuncs.com/curder/laravel-docker:8.5.2 php -v
+    docker run --rm registry.cn-hangzhou.aliyuncs.com/curder/laravel-docker:8.5.3 php -v
     ```
 
 For Apple Silicon or other arm-based CPUs, use the `--platform linux/arm64` option.
