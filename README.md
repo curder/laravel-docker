@@ -33,6 +33,24 @@
 
 > All PHP images use composer version 2, if you want to use version 1, please run `composer self-update --1` command.
 
+## Features
+
+This image comes with the following tools pre-installed:
+
+- **Composer** - PHP dependency manager (version 2)
+- **PHP_CodeSniffer** (`phpcs`) - Check PHP, JavaScript and CSS files against coding standards
+- **Laravel Pint** - Opinionated PHP code style fixer
+
+### Code Style Tools
+
+```bash
+# Check code style with PHP_CodeSniffer
+docker run --rm -v $(pwd):/var/www curder/laravel-docker:8.5.6 phpcs --standard=PSR12 src/
+
+# Fix code style with Laravel Pint
+docker run --rm -v $(pwd):/var/www curder/laravel-docker:8.5.6 pint src/
+```
+
 ## Usage
 
 ```bash
