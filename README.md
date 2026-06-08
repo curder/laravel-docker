@@ -6,13 +6,13 @@
 
 [![Docker Badge](https://img.shields.io/docker/pulls/curder/laravel-docker)](https://hub.docker.com/r/curder/laravel-docker/)
 
-| Tags     | PHP version | Architecture | Features                                                                                                 |
-|----------|-------------|:-------------|----------------------------------------------------------------------------------------------------------|
-| 8.3.31   | 8.3.31      | amd64/arm64  | ✅ Everything                                                                                             |
-| 8.4.22   | 8.4.22      | amd64/arm64  | ✅ Everything                                                                                             |
-| 8.5.7rc2 | 8.5.7rc2    | amd64/arm64  | ✅ Everything                                                                                             |
-| stable   | **8.5**     | amd64/arm64  | 🔗 Aliases the stable version of PHP that supports all features of this docker image.                    |
-| latest   | **8.5**     | amd64/arm64  | 🔗 Aliases the latest version of PHP available (even if that version does not support all features yet). |
+| Tags   | PHP version | Architecture | Features                                                                                                 |
+|--------|-------------|:-------------|----------------------------------------------------------------------------------------------------------|
+| 8.3.31 | 8.3.31      | amd64/arm64  | ✅ Everything                                                                                             |
+| 8.4.22 | 8.4.22      | amd64/arm64  | ✅ Everything                                                                                             |
+| 8.5.7  | 8.5.7       | amd64/arm64  | ✅ Everything                                                                                             |
+| stable | **8.5**     | amd64/arm64  | 🔗 Aliases the stable version of PHP that supports all features of this docker image.                    |
+| latest | **8.5**     | amd64/arm64  | 🔗 Aliases the latest version of PHP available (even if that version does not support all features yet). |
 
 <details>
 <summary>More EOL versions</summary>
@@ -45,16 +45,16 @@ This image comes with the following tools pre-installed:
 
 ```bash
 # Check code style with PHP_CodeSniffer
-docker run --rm -v $(pwd):/var/www curder/laravel-docker:8.5.6 phpcs --standard=PSR12 src/
+docker run --rm -v $(pwd):/var/www curder/laravel-docker:8.5.7 phpcs --standard=PSR12 src/
 
 # Fix code style with Laravel Pint
-docker run --rm -v $(pwd):/var/www curder/laravel-docker:8.5.6 pint src/
+docker run --rm -v $(pwd):/var/www curder/laravel-docker:8.5.7 pint src/
 ```
 
 ## Usage
 
 ```bash
-docker run --rm curder/laravel-docker:8.5.6 php -v
+docker run --rm curder/laravel-docker:8.5.7 php -v
 ```
 
 ## Mirrors
@@ -62,13 +62,13 @@ docker run --rm curder/laravel-docker:8.5.6 php -v
 - GitHub Mirror
 
     ```bash
-    docker run --rm ghcr.io/curder/laravel-docker:8.5.6 php -v
+    docker run --rm ghcr.io/curder/laravel-docker:8.5.7 php -v
     ```
 
 - Ali Mirror
 
     ```bash
-    docker run --rm registry.cn-hangzhou.aliyuncs.com/curder/laravel-docker:8.5.6 php -v
+    docker run --rm registry.cn-hangzhou.aliyuncs.com/curder/laravel-docker:8.5.7 php -v
     ```
 
 For Apple Silicon or other arm-based CPUs, use the `--platform linux/arm64` option.
