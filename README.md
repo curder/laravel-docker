@@ -27,7 +27,7 @@
 | 7.4.33 | 7.4.33      | amd64/arm64  | ✅ Everything |
 | 8.0.30 | 8.0.30      | amd64/arm64  | ✅ Everything |
 | 8.1.34 | 8.1.34      | amd64/arm64  | ✅ Everything |
-| 8.2.30 | 8.2.30      | amd64/arm64  | ✅ Everything |
+| 8.2.31 | 8.2.31      | amd64/arm64  | ✅ Everything |
 
 </details>
 
