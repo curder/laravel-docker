@@ -74,6 +74,8 @@ jobs:
           push: true
           platforms: linux/amd64,linux/arm64
           context: ${{ matrix.php }}
+          provenance: false
+          sbom: false
           tags: |
             ghcr.io/${{ env.IMAGE }}:${{ matrix.tag }}
             ${{ env.IMAGE }}:${{ matrix.tag }}
