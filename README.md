@@ -10,15 +10,15 @@
 |-----------|-------------|:-------------|----------------------------------------------------------------------------------------------------------|
 | 8.3.33    | 8.3.33      | amd64/arm64  | ✅ Everything                                                                                            |
 | 8.4.25rc1 | 8.4.25rc1   | amd64/arm64  | ✅ Everything                                                                                            |
-| 8.5.9     | 8.5.9       | amd64/arm64  | ✅ Everything                                                                                            |
+| 8.5.10rc1 | 8.5.10rc1   | amd64/arm64  | ✅ Everything                                                                                            |
 | stable    | **8.5**     | amd64/arm64  | 🔗 Aliases the stable version of PHP that supports all features of this docker image.                    |
 | latest    | **8.5**     | amd64/arm64  | 🔗 Aliases the latest version of PHP available (even if that version does not support all features yet). |
 
 <details>
 <summary>More EOL versions</summary>
 
-| Tags   | PHP version | Architecture | Features     |
-|--------|-------------|:-------------|--------------|
+| Tags   | PHP version | Architecture | Features      |
+|--------|-------------|:-------------|---------------|
 | 5.6.40 | 5.6.40      | amd64        | ✅ Everything |
 | 7.0.33 | 7.0.33      | amd64        | ✅ Everything |
 | 7.1.33 | 7.1.33      | amd64/arm64  | ✅ Everything |
