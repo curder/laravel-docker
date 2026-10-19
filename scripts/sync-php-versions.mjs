@@ -52,27 +52,36 @@ function renderDockerfile(entry, nextVersion) {
   return { path, before: source, after: source.replace(/^FROM php:\S+-alpine\s*$/m, `FROM php:${nextVersion}-alpine`) };
 }
 
+/**
+ * 发布 tag 一律小写（如 8.4.27RC1 → 8.4.27rc1），但 Dockerfile 的 FROM
+ * 必须用官方原始大小写（php:8.4.27RC1-alpine），否则拉不到镜像。
+ */
+function publishedTag(version) {
+  return version.toLowerCase();
+}
+
 function renderReadme(readme, entry, nextVersion) {
   const from = entry.version;
   let replaced = false;
 
-  // 表格行形如 `| 8.5.11 | 8.5.11 | amd64/arm64 | ✅ Everything |`，
-  // 只认「第一列 = 第二列 = 旧版本号」的行，避免误伤示例命令里的 tag。
+  // 表格行形如 `| 8.5.11 | 8.5.11 | amd64/arm64 | ✅ Everything |`：
+  // 第一列是发布 tag（小写），第二列是 PHP version（保留官方大小写）。
+  // 只认「第二列 = 旧版本号」的行，避免误伤示例命令里的 tag。
   const lines = readme.split('\n').map((line) => {
     if (replaced) return line;
 
     const cells = line.split('|');
     if (cells.length < 4) return line;
-    if (cells[1].trim() !== from || cells[2].trim() !== from) return line;
+    if (cells[2].trim() !== from) return line;
 
     replaced = true;
-    cells[1] = padCell(cells[1], nextVersion);
+    cells[1] = padCell(cells[1], publishedTag(nextVersion));
     cells[2] = padCell(cells[2], nextVersion);
     return cells.join('|');
   });
 
   if (!replaced) {
-    throw new Error(`README.md 中找不到「| ${from} | ${from} |」这样的表格行`);
+    throw new Error(`README.md 中找不到 PHP version 列为「${from}」的表格行`);
   }
   return lines.join('\n');
 }
@@ -217,11 +226,13 @@ async function runCheck() {
       problems.push(`${entry.dir}/Dockerfile 是 ${matched[1]}，versions.json 是 ${entry.version}`);
     }
 
-    if (!entry.tags.includes(entry.version)) {
-      problems.push(`${entry.php} 的 tags 中没有当前版本号 ${entry.version}`);
+    if (!entry.tags.includes(publishedTag(entry.version))) {
+      problems.push(
+        `${entry.php} 的 tags 中没有发布 tag ${publishedTag(entry.version)}（发布 tag 需小写）`,
+      );
     }
     for (const tag of entry.tags) {
-      if (tag !== entry.version && !ALIAS_TAG.test(tag)) {
+      if (tag !== publishedTag(entry.version) && !ALIAS_TAG.test(tag)) {
         problems.push(`${entry.php} 含未知 tag 别名 "${tag}"（应为 latest/stable/主版本.次版本）`);
       }
     }
@@ -309,7 +320,9 @@ async function runSync() {
     if (MODE === 'write') {
       writeFileSync(dockerfile.path, dockerfile.after);
       readme = nextReadme;
-      entry.tags = entry.tags.map((tag) => (tag === entry.version ? nextVersion : tag));
+      entry.tags = entry.tags.map((tag) =>
+        tag === publishedTag(entry.version) ? publishedTag(nextVersion) : tag,
+      );
       entry.version = nextVersion;
     } else {
       log(`[dry-run] ${entry.dir}: ${entry.version} → ${nextVersion}`);
