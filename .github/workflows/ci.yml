@@ -82,12 +82,25 @@ jobs:
           set -euo pipefail
           image=smoke:${{ matrix.php }}
           extensions='redis imagick bcmath intl gd pdo_mysql pdo_pgsql zip soap'
+
           docker run --rm "$image" php -v
 
+          # 先把模块列表完整取到变量：直接接 grep -q 会让 php -m 收到 SIGPIPE，
+          # 导致无规律的 "write /dev/stdout: broken pipe" 误报缺扩展。
+          modules=$(docker run --rm "$image" php -m)
+          missing=''
           for ext in $extensions; do
-            docker run --rm "$image" php -m | grep -qx "$ext" \
-              || { echo "::error::缺少 PHP 扩展 $ext"; exit 1; }
+            if ! printf '%s\n' "$modules" | grep -qx "$ext"; then
+              missing="$missing $ext"
+            fi
           done
+
+          if [ -n "$missing" ]; then
+            echo "::error::缺少 PHP 扩展:${missing}"
+            printf '%s\n' "$modules"
+            exit 1
+          fi
+          echo "✅ 扩展齐全: $extensions"
 
       - name: Verify bundled tools
         run: |
