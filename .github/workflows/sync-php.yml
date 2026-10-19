@@ -1,0 +1,156 @@
+name: Sync PHP versions
+
+# 每小时检查 hub.docker.com/_/php 的纯 alpine tag（8.5.11-alpine /
+# 8.5.12RC1-alpine）。有新 patch 版本时更新 versions.json、各 Dockerfile、
+# README.md，推到 auto/php-bump 分支并开 PR，checks 通过后自动 squash 合并。
+# 合并产生的 push 会正常触发 packages.yml 构建镜像（依赖 App token）。
+
+on:
+  schedule:
+    # 每小时第 17 分钟。PHP 官方周四发版，Docker Hub 构建完成后一小时内捕获。
+    - cron: '17 * * * *'
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: 'dry-run 只打印计划，write 会真正提交 PR'
+        type: choice
+        default: dry-run
+        options:
+          - dry-run
+          - write
+
+concurrency:
+  group: sync-php
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+env:
+  BASE_BRANCH: master
+  HEAD_BRANCH: auto/php-bump
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      # GITHUB_TOKEN 产生的 push/PR 不会再触发其他 workflow，必须用 App token，
+      # 否则 PR 上的 required checks 永远 pending，auto-merge 永远不会执行。
+      - name: Create GitHub App token
+        id: app
+        uses: actions/create-github-app-token@v3
+        with:
+          app-id: ${{ vars.APP_ID }}
+          private-key: ${{ secrets.APP_PRIVATE_KEY }}
+
+      - name: Checkout
+        uses: actions/checkout@v7
+        with:
+          token: ${{ steps.app.outputs.token }}
+          fetch-depth: 0
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: 22
+
+      - name: Detect and render
+        id: sync
+        env:
+          MODE: ${{ inputs.mode || 'write' }}
+        run: |
+          set -euo pipefail
+          log="$RUNNER_TEMP/sync.log"
+          {
+            echo "changed=false"
+            echo "summary=无变化"
+          } >> "$GITHUB_OUTPUT"
+
+          node scripts/sync-php-versions.mjs --"$MODE" > "$log"
+          cat "$log"
+
+          if git diff --quiet; then
+            echo "✅ 所有分支已是最新"
+            exit 0
+          fi
+
+          if [ "$MODE" != "write" ]; then
+            echo "::notice::dry-run 模式，不提交改动"
+            exit 0
+          fi
+
+          versions=$(jq -r '[.[].version] | join(", ")' versions.json)
+          echo "chore: 同步 PHP 版本至 ${versions}" \
+            > "$RUNNER_TEMP/commit-msg.txt"
+
+          {
+            echo "changed=true"
+            echo "versions=${versions}"
+            echo "summary=已提交 PR（${versions}）"
+          } >> "$GITHUB_OUTPUT"
+
+      - name: Push branch
+        if: steps.sync.outputs.changed == 'true'
+        run: |
+          set -euo pipefail
+          bot='41898282+github-actions[bot]@users.noreply.github.com'
+          git config user.name 'github-actions[bot]'
+          git config user.email "$bot"
+
+          git checkout -B "$HEAD_BRANCH" "origin/$BASE_BRANCH"
+          git add -A
+          git commit -F "$RUNNER_TEMP/commit-msg.txt"
+          # 该分支只由 bot 写入；--force-with-lease 避免覆盖人工提交
+          git push --force-with-lease origin "$HEAD_BRANCH"
+
+      - name: Open or update pull request
+        if: steps.sync.outputs.changed == 'true'
+        env:
+          GH_TOKEN: ${{ steps.app.outputs.token }}
+        run: |
+          set -euo pipefail
+          pr=$(gh pr list --head "$HEAD_BRANCH" --base "$BASE_BRANCH" \
+            --state open --json number -q '.[0].number')
+
+          {
+            echo '自动同步 hub.docker.com/_/php 的最新 patch 版本。'
+            echo
+            echo '```text'
+            cat "$RUNNER_TEMP/sync.log"
+            echo '```'
+            echo
+            echo '改动：versions.json、各版本目录下的 Dockerfile、README.md。'
+            echo '上游新增分支（如 8.6）只在 Actions 摘要中提示，不自动建目录。'
+          } > "$RUNNER_TEMP/pr-body.md"
+
+          if [ -z "$pr" ]; then
+            gh pr create \
+              --base "$BASE_BRANCH" \
+              --head "$HEAD_BRANCH" \
+              --title "chore: 同步 PHP 版本至 ${{ steps.sync.outputs.versions }}" \
+              --body-file "$RUNNER_TEMP/pr-body.md"
+            pr=$(gh pr list --head "$HEAD_BRANCH" --base "$BASE_BRANCH" \
+              --state open --json number -q '.[0].number')
+          else
+            gh pr comment "$pr" --body-file "$RUNNER_TEMP/pr-body.md"
+          fi
+
+          # 排队自动合并：分支保护要求 consistency / smoke 通过后自动 squash
+          gh pr merge "$pr" --squash --auto
+
+      - name: Summarize
+        if: always()
+        env:
+          SYNC_RESULT: ${{ steps.sync.outputs.summary }}
+          TRIGGER: ${{ github.event_name }}
+          MODE_INPUT: ${{ inputs.mode || 'write' }}
+        run: |
+          set -euo pipefail
+          {
+            echo '## PHP 版本同步'
+            echo "- 触发方式：\`$TRIGGER\`"
+            echo "- 模式：\`$MODE_INPUT\`"
+            echo "- 结果：$SYNC_RESULT"
+          } >> "$GITHUB_STEP_SUMMARY"
