@@ -6,7 +6,11 @@
   "author": "curder <q.curder@gmail.com>",
   "license": "MIT",
   "scripts": {
-    "fix": "npx markdownlint-cli2 --config .markdownlint-cli2.yaml --fix"
+    "fix": "npx markdownlint-cli2 --config .markdownlint-cli2.yaml --fix",
+    "lint:md": "npx markdownlint-cli2 --config .markdownlint-cli2.yaml",
+    "sync": "node scripts/sync-php-versions.mjs",
+    "sync:check": "node scripts/sync-php-versions.mjs --check",
+    "sync:write": "node scripts/sync-php-versions.mjs --write"
   },
   "devDependencies": {
     "markdownlint-cli2": "^0.17.2"
