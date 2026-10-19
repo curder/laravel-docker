@@ -19,6 +19,7 @@ import { join } from 'node:path';
 const ROOT = process.cwd();
 const MODE = resolveMode(process.argv);
 const QUIET = process.argv.includes('--quiet');
+const REPORT_PATH = resolveArgValue(process.argv, '--report');
 
 const HUB = 'https://hub.docker.com/v2/repositories/library/php/tags';
 const REQUIRED_PLATFORMS = ['amd64', 'arm64'];
@@ -95,6 +96,19 @@ function resolveMode(argv) {
   if (argv.includes('--check')) return 'check';
   if (argv.includes('--write')) return 'write';
   return 'dry-run';
+}
+
+/** 读取 `--flag value` 形式的参数值，用于把变更清单写机器可读的报告文件 */
+function resolveArgValue(argv, flag) {
+  const index = argv.indexOf(flag);
+  return index === -1 ? null : (argv[index + 1] ?? null);
+}
+
+/** 写出机器可读的变更报告，供 workflow 拼提交信息 / PR 标题（只含真正变化的版本） */
+function writeReport({ changes, unmanaged }) {
+  if (!REPORT_PATH) return;
+  writeFileSync(REPORT_PATH, `${JSON.stringify({ changes, unmanaged }, null, 2)}\n`);
+  log(`📝 变更报告已写入 ${REPORT_PATH}`);
 }
 
 /** 是否带 latest/stable 别名（这两个别名必须指向正式版） */
@@ -307,6 +321,17 @@ async function runSync() {
     writeFileSync(entriesPath, `${JSON.stringify(entries, null, 2)}\n`);
     log(`✅ 已更新 ${plans.map(({ entry, nextVersion }) => `${entry.php} → ${nextVersion}`).join(', ')}`);
   }
+
+  // 2.5) 机器可读报告：只含本轮的变更项
+  writeReport({
+    changes: plans.map(({ entry, from, nextVersion }) => ({
+      php: entry.php,
+      dir: entry.dir,
+      from,
+      to: nextVersion,
+    })),
+    unmanaged,
+  });
 
   // 3) 输出到 Actions 摘要与警告
   const summary = [
