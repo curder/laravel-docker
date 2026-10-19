@@ -21,6 +21,12 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v7.0.1
+        with:
+          # commit subject 门禁要对比 base…head，浅克隆会让该范围为空；
+          # 仓库很小，直接全量拉取。
+          fetch-depth: 0
+          # 本 job 不推送，无需把 token 写进 git config
+          persist-credentials: false
 
       - name: Set up Node.js
         uses: actions/setup-node@v7.1.0
@@ -44,6 +50,43 @@ jobs:
           corepack enable
           yarn install --frozen-lockfile
           yarn lint:md
+
+      # Commit subjects and PR titles must stay English: release tooling and CI
+      # logs assume ASCII, and mixed scripts make the log hard to scan.
+      # PR title 也要查：本仓库用 squash 合并，落地后的 subject 就是 PR 标题。
+      - name: Lint commit subject language
+        if: github.event_name == 'pull_request'
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+          PR_TITLE: ${{ github.event.pull_request.title }}
+        run: |
+          set -euo pipefail
+          cjk='/[\x{2e80}-\x{9fff}\x{ff00}-\x{ffef}]/'
+          failed=0
+
+          # 仅统计本 PR 新增的 commit，不回看历史
+          range="${BASE_SHA}..${HEAD_SHA}"
+          echo "checking $range"
+          offenders=$(git log --format='%h%x09%s' "$range" \
+            | perl -CSD -ne "print if $cjk" || true)
+          if [ -n "$offenders" ]; then
+            echo "::error::commit subject 含中文，请改为英文"
+            printf '%s\n' "$offenders"
+            failed=1
+          fi
+
+          if printf '%s' "$PR_TITLE" | perl -CSD -ne "print if $cjk" \
+            | grep -q .; then
+            echo "::error::PR 标题含中文，请改为英文：$PR_TITLE"
+            failed=1
+          fi
+
+          if [ "$failed" -ne 0 ]; then
+            echo "::error::提交信息必须为英文（见 AGENTS.md）"
+            exit 1
+          fi
+          echo "✅ commit subject / PR 标题均为 ASCII"
 
   smoke:
     runs-on: ubuntu-latest
@@ -110,6 +153,9 @@ jobs:
           docker run --rm "$image" phpcs --version
           docker run --rm "$image" pint --version
           docker run --rm "$image" node --version
+          # GNU Autotools 供构建期从源码编译原生模块（如 gifsicle）使用，见上游 PR #109
+          docker run --rm "$image" autoreconf --version
+          docker run --rm "$image" automake --version
 
   # 聚合门禁：分支保护只认这一个 check，避免矩阵 job 改名后保护失效。
   verify:
