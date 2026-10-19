@@ -1,0 +1,100 @@
+name: Verify
+
+# PR 门禁：版本一致性 + Dockerfile 静态检查 + 镜像冒烟。
+# sync-php.yml 打开的 PR 必须等 consistency / smoke 通过才会被自动合并。
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: verify-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  consistency:
+    name: consistency
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: 22
+
+      # 离线校验：versions.json / 每个 Dockerfile 的 FROM / README 表格行是否一致
+      - name: Check version consistency
+        run: yarn sync:check
+
+      - name: Lint Dockerfiles
+        uses: hadolint/hadolint-action@v3
+        with:
+          dockerfile: '**/Dockerfile'
+          recursive: true
+
+      - name: Lint Markdown
+        run: |
+          set -euo pipefail
+          corepack enable
+          yarn install --frozen-lockfile
+          yarn lint:md
+
+  smoke:
+    name: smoke
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - php: '8.5'
+            dir: '8.5'
+          - php: '8.4'
+            dir: '8.4'
+          - php: '8.3'
+            dir: '8.3'
+          - php: '8.2'
+            dir: 'eol/8.2'
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v4
+
+      # 只构建本机架构，验证 Dockerfile 能跑通，不推任何 tag
+      - name: Build image
+        uses: docker/build-push-action@v7
+        with:
+          context: ${{ matrix.dir }}
+          load: true
+          tags: smoke:${{ matrix.php }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      - name: Verify PHP and extensions
+        run: |
+          set -euo pipefail
+          image=smoke:${{ matrix.php }}
+          extensions='redis imagick bcmath intl gd pdo_mysql pdo_pgsql zip soap'
+          docker run --rm "$image" php -v
+
+          for ext in $extensions; do
+            docker run --rm "$image" php -m | grep -qx "$ext" \
+              || { echo "::error::缺少 PHP 扩展 $ext"; exit 1; }
+          done
+
+      - name: Verify bundled tools
+        run: |
+          set -euo pipefail
+          image=smoke:${{ matrix.php }}
+          docker run --rm "$image" composer --version
+          docker run --rm "$image" phpcs --version
+          docker run --rm "$image" pint --version
+          docker run --rm "$image" node --version
