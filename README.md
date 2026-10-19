@@ -77,3 +77,5 @@ For Apple Silicon or other arm-based CPUs, use the `--platform linux/arm64` opti
 
 - [Run test suite and check code style](http://lorisleiva.com/using-gitlabs-pipeline-with-laravel/)
 - [Build, test and deploy your Laravel application](http://lorisleiva.com/laravel-deployment-using-gitlab-pipelines/)
+
+<!-- paths-filter probe -->
