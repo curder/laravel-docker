@@ -9,6 +9,12 @@ on:
   push:
     branches:
       - master
+    # 镜像内容只由 Dockerfile 与 versions.json 决定。不加过滤的话，
+    # 改 README、CI 甚至仅重写 commit message 也会触发一次 30+ 分钟的全量重建。
+    paths:
+      - '**/Dockerfile'
+      - 'versions.json'
+      - '.github/workflows/packages.yml'
   workflow_dispatch:
 
 permissions:

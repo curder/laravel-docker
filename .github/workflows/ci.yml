@@ -54,19 +54,36 @@ jobs:
       # Commit subjects and PR titles must stay English: release tooling and CI
       # logs assume ASCII, and mixed scripts make the log hard to scan.
       # PR title 也要查：本仓库用 squash 合并，落地后的 subject 就是 PR 标题。
+      # push 到 master 也要查，否则直接推送 / 机器人推送能绕过门禁。
       - name: Lint commit subject language
-        if: github.event_name == 'pull_request'
         env:
           BASE_SHA: ${{ github.event.pull_request.base.sha }}
           HEAD_SHA: ${{ github.event.pull_request.head.sha }}
           PR_TITLE: ${{ github.event.pull_request.title }}
+          EVENT_NAME: ${{ github.event_name }}
+          BEFORE_SHA: ${{ github.event.before }}
+          AFTER_SHA: ${{ github.event.after }}
         run: |
           set -euo pipefail
           cjk='/[\x{2e80}-\x{9fff}\x{ff00}-\x{ffef}]/'
           failed=0
 
-          # 仅统计本 PR 新增的 commit，不回看历史
-          range="${BASE_SHA}..${HEAD_SHA}"
+          # 40 个 0 表示新分支，无法确定可比较范围
+          null_sha=0000000000000000000000000000000000000000
+
+          if [ "$EVENT_NAME" = 'pull_request' ]; then
+            # 只看本 PR 新增的 commit，不回看历史
+            range="${BASE_SHA}..${HEAD_SHA}"
+          elif [ -n "${BEFORE_SHA:-}" ] \
+            && [ "$BEFORE_SHA" != "$null_sha" ]; then
+            # push：只看本次推送引入的 commit（squash 后的 subject 也在这里）
+            range="${BEFORE_SHA}..${AFTER_SHA}"
+          else
+            # 新建分支 / 无 before 的推送，无法确定范围，跳过
+            echo 'no comparable range; skipping'
+            exit 0
+          fi
+
           echo "checking $range"
           offenders=$(git log --format='%h%x09%s' "$range" \
             | perl -CSD -ne "print if $cjk" || true)
@@ -76,8 +93,9 @@ jobs:
             failed=1
           fi
 
-          if printf '%s' "$PR_TITLE" | perl -CSD -ne "print if $cjk" \
-            | grep -q .; then
+          if [ -n "${PR_TITLE:-}" ] && \
+             printf '%s' "$PR_TITLE" | perl -CSD -ne "print if $cjk" \
+               | grep -q .; then
             echo "::error::PR 标题含中文，请改为英文：$PR_TITLE"
             failed=1
           fi
