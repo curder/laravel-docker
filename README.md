@@ -45,16 +45,16 @@ This image comes with the following tools pre-installed:
 
 ```bash
 # Check code style with PHP_CodeSniffer
-docker run --rm -v $(pwd):/var/www curder/laravel-docker:8.5.10 phpcs --standard=PSR12 src/
+docker run --rm -v $(pwd):/var/www curder/laravel-docker:stable phpcs --standard=PSR12 src/
 
 # Fix code style with Laravel Pint
-docker run --rm -v $(pwd):/var/www curder/laravel-docker:8.5.10 pint src/
+docker run --rm -v $(pwd):/var/www curder/laravel-docker:stable pint src/
 ```
 
 ## Usage
 
 ```bash
-docker run --rm curder/laravel-docker:8.5.10 php -v
+docker run --rm curder/laravel-docker:stable php -v
 ```
 
 ## Mirrors
@@ -62,13 +62,13 @@ docker run --rm curder/laravel-docker:8.5.10 php -v
 - GitHub Mirror
 
     ```bash
-    docker run --rm ghcr.io/curder/laravel-docker:8.5.10 php -v
+    docker run --rm ghcr.io/curder/laravel-docker:stable php -v
     ```
 
 - Ali Mirror
 
     ```bash
-    docker run --rm registry.cn-hangzhou.aliyuncs.com/curder/laravel-docker:8.5.10 php -v
+    docker run --rm registry.cn-hangzhou.aliyuncs.com/curder/laravel-docker:stable php -v
     ```
 
 For Apple Silicon or other arm-based CPUs, use the `--platform linux/arm64` option.
