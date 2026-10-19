@@ -36,19 +36,46 @@ jobs:
     timeout-minutes: 10
 
     steps:
-      # GITHUB_TOKEN 产生的 push/PR 不会再触发其他 workflow，必须用 App token，
+      # GITHUB_TOKEN 产生的 push/PR 不会再触发其他 workflow，必须用非 GITHUB_TOKEN 身份，
       # 否则 PR 上的 required checks 永远 pending，auto-merge 永远不会执行。
+      # 优先用 GitHub App（永久有效）；未配置时回退到 secrets.BOT_TOKEN / secrets.TOKEN（PAT）。
       - name: Create GitHub App token
         id: app
+        if: vars.APP_ID != ''
         uses: actions/create-github-app-token@v3
         with:
           app-id: ${{ vars.APP_ID }}
           private-key: ${{ secrets.APP_PRIVATE_KEY }}
 
+      - name: Resolve bot token
+        id: bot
+        env:
+          APP_TOKEN: ${{ steps.app.outputs.token }}
+          PAT_TOKEN: ${{ secrets.BOT_TOKEN || secrets.TOKEN }}
+        run: |
+          set -euo pipefail
+          token="${APP_TOKEN:-$PAT_TOKEN}"
+          if [ -z "$token" ]; then
+            msg='缺少 bot token：请配置 APP_ID/APP_PRIVATE_KEY，或 BOT_TOKEN/TOKEN'
+            echo "::error::${msg}"
+            exit 1
+          fi
+          echo "token=${token}" >> "$GITHUB_OUTPUT"
+
+          # 提前校验 token 未过期且有写权限，避免在后面的 push 步骤才失败
+          login=$(GH_TOKEN="$token" gh api /user --jq .login)
+          perms=$(GH_TOKEN="$token" gh api "repos/$GITHUB_REPOSITORY" \
+            --jq .permissions.push)
+          echo "以 ${login} 身份操作，push 权限：${perms}"
+          if [ "$perms" != "true" ]; then
+            echo '::error::token 没有本仓库写权限（可能已过期或权限不足）'
+            exit 1
+          fi
+
       - name: Checkout
         uses: actions/checkout@v7
         with:
-          token: ${{ steps.app.outputs.token }}
+          token: ${{ steps.bot.outputs.token }}
           fetch-depth: 0
 
       - name: Set up Node.js
@@ -108,7 +135,7 @@ jobs:
       - name: Open or update pull request
         if: steps.sync.outputs.changed == 'true'
         env:
-          GH_TOKEN: ${{ steps.app.outputs.token }}
+          GH_TOKEN: ${{ steps.bot.outputs.token }}
         run: |
           set -euo pipefail
           pr=$(gh pr list --head "$HEAD_BRANCH" --base "$BASE_BRANCH" \
