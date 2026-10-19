@@ -90,12 +90,14 @@ jobs:
         run: |
           set -euo pipefail
           log="$RUNNER_TEMP/sync.log"
+          report="$RUNNER_TEMP/sync-report.json"
           {
             echo "changed=false"
             echo "summary=无变化"
           } >> "$GITHUB_OUTPUT"
 
-          node scripts/sync-php-versions.mjs --"$MODE" > "$log"
+          node scripts/sync-php-versions.mjs --"$MODE" \
+            --report "$report" > "$log"
           cat "$log"
 
           if git diff --quiet; then
@@ -108,14 +110,19 @@ jobs:
             exit 0
           fi
 
-          versions=$(jq -r '[.[].version] | join(", ")' versions.json)
-          echo "chore: 同步 PHP 版本至 ${versions}" \
+          # 只列真正变化的版本，例如 8.4.27RC1 / 8.3.36
+          versions=$(jq -r '[.changes[].to] | join(", ")' "$report")
+          title=$(jq -r '.changes
+            | map("\(.php) → \(.to)")
+            | join(", ")' "$report")
+          echo "chore: 同步 PHP 版本（${title}）" \
             > "$RUNNER_TEMP/commit-msg.txt"
 
           {
             echo "changed=true"
             echo "versions=${versions}"
-            echo "summary=已提交 PR（${versions}）"
+            echo "title=${title}"
+            echo "summary=已提交 PR（${title}）"
           } >> "$GITHUB_OUTPUT"
 
       - name: Push branch
@@ -156,7 +163,7 @@ jobs:
             gh pr create \
               --base "$BASE_BRANCH" \
               --head "$HEAD_BRANCH" \
-              --title "chore: 同步 PHP 版本至 ${{ steps.sync.outputs.versions }}" \
+              --title "chore: 同步 PHP 版本（${{ steps.sync.outputs.title }}）" \
               --body-file "$RUNNER_TEMP/pr-body.md"
             pr=$(gh pr list --head "$HEAD_BRANCH" --base "$BASE_BRANCH" \
               --state open --json number -q '.[0].number')
