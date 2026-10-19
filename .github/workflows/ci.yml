@@ -118,13 +118,16 @@ jobs:
           - php: '8.5'
             dir: '8.5'
             autotools: true
+            pcov: true
           - php: '8.4'
             dir: '8.4'
             autotools: true
+            pcov: true
           - php: '8.3'
             dir: '8.3'
             autotools: true
-          # eol/8.2 未带 autotools，标记缺省，断言会自动跳过。
+            pcov: true
+          # eol/8.2 未带 autotools / pcov，标记缺省，断言会自动跳过。
           - php: '8.2'
             dir: 'eol/8.2'
     steps:
@@ -187,6 +190,31 @@ jobs:
           image=smoke:${{ matrix.php }}
           docker run --rm "$image" autoreconf --version
           docker run --rm "$image" automake --version
+
+      # pcov 用于生成覆盖率（比 xdebug 快，见上游 PR #112）。它与 xdebug
+      # 可以共存：默认 xdebug.mode=develop，覆盖率驱动不会被 xdebug 抢占。
+      - name: Verify PCOV
+        if: matrix.pcov
+        run: |
+          set -euo pipefail
+          image=smoke:${{ matrix.php }}
+
+          modules=$(docker run --rm "$image" php -m)
+          printf '%s\n' "$modules" | grep -qx pcov \
+            || { echo '::error::pcov 扩展缺失'; exit 1; }
+
+          # 只验「装上了」不够，还要能真正采集到覆盖率数据。
+          docker run --rm "$image" php -d pcov.enabled=1 -r '
+            pcov\start();
+            $x = 1 + 1;
+            pcov\stop();
+            $c = pcov\collect();
+            if (!is_array($c)) {
+              fwrite(STDERR, "pcov collect failed\n");
+              exit(1);
+            }
+            echo "pcov ok\n";
+          '
 
   # 聚合门禁：分支保护只认这一个 check，避免矩阵 job 改名后保护失效。
   verify:
