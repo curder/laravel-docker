@@ -89,6 +89,8 @@ jobs:
           echo "✅ commit subject / PR 标题均为 ASCII"
 
   smoke:
+    # 显式命名：矩阵新增键（如 autotools）时不会改变 check 名。
+    name: smoke (${{ matrix.php }}, ${{ matrix.dir }})
     runs-on: ubuntu-latest
     timeout-minutes: 40
     strategy:
