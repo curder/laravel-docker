@@ -115,7 +115,8 @@ jobs:
           title=$(jq -r '.changes
             | map("\(.php) → \(.to)")
             | join(", ")' "$report")
-          echo "chore: 同步 PHP 版本（${title}）" \
+          # Titles stay English: tooling and CI logs assume ASCII.
+          echo "chore: sync PHP versions (${title})" \
             > "$RUNNER_TEMP/commit-msg.txt"
 
           {
@@ -143,8 +144,10 @@ jobs:
         if: steps.sync.outputs.changed == 'true'
         env:
           GH_TOKEN: ${{ steps.bot.outputs.token }}
+          TITLE: ${{ steps.sync.outputs.title }}
         run: |
           set -euo pipefail
+          pr_title="chore: sync PHP versions (${TITLE})"
           pr=$(gh pr list --head "$HEAD_BRANCH" --base "$BASE_BRANCH" \
             --state open --json number -q '.[0].number')
 
@@ -163,7 +166,7 @@ jobs:
             gh pr create \
               --base "$BASE_BRANCH" \
               --head "$HEAD_BRANCH" \
-              --title "chore: 同步 PHP 版本（${{ steps.sync.outputs.title }}）" \
+              --title "$pr_title" \
               --body-file "$RUNNER_TEMP/pr-body.md"
             pr=$(gh pr list --head "$HEAD_BRANCH" --base "$BASE_BRANCH" \
               --state open --json number -q '.[0].number')
