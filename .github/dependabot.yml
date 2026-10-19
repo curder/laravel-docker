@@ -1,31 +1,12 @@
 version: 2
 updates:
-
-  - package-ecosystem: "docker"
-    directory: "/8.3"
-    schedule:
-      interval: "daily"
-    ignore:
-      - dependency-name: "*"
-        update-types: ["version-update:semver-major"]
-
-  - package-ecosystem: "docker"
-    directory: "/8.4"
-    schedule:
-      interval: "daily"
-    ignore:
-      - dependency-name: "*"
-        update-types: ["version-update:semver-major"]
-
-  - package-ecosystem: "docker"
-    directory: "/8.5"
-    schedule:
-      interval: "daily"
-    ignore:
-      - dependency-name: "*"
-        update-types: ["version-update:semver-major"]
-
+  # PHP 基础镜像的版本由 sync-php.yml 每小时自动同步（含 eol/ 目录），
+  # 这里不要再开 docker 生态，否则会和自动 PR 抢同一批 Dockerfile。
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
-      interval: "daily"
+      interval: "weekly"
+    groups:
+      actions:
+        patterns:
+          - "*"
