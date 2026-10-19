@@ -97,10 +97,14 @@ jobs:
         include:
           - php: '8.5'
             dir: '8.5'
+            autotools: true
           - php: '8.4'
             dir: '8.4'
+            autotools: true
           - php: '8.3'
             dir: '8.3'
+            autotools: true
+          # eol/8.2 未带 autotools，标记缺省，断言会自动跳过。
           - php: '8.2'
             dir: 'eol/8.2'
     steps:
@@ -153,7 +157,14 @@ jobs:
           docker run --rm "$image" phpcs --version
           docker run --rm "$image" pint --version
           docker run --rm "$image" node --version
-          # GNU Autotools 供构建期从源码编译原生模块（如 gifsicle）使用，见上游 PR #109
+
+      # 只有 8.3/8.4/8.5 自带 GNU Autotools（供构建期编译 gifsicle 等原生模块，
+      # 见上游 PR #109）；eol/8.2 不在范围内，靠 matrix.autotools 跳过。
+      - name: Verify GNU Autotools
+        if: matrix.autotools
+        run: |
+          set -euo pipefail
+          image=smoke:${{ matrix.php }}
           docker run --rm "$image" autoreconf --version
           docker run --rm "$image" automake --version
 
