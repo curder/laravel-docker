@@ -1,0 +1,83 @@
+name: Delete Docker Hub tag
+
+# 手动触发的 tag 清理。发布 tag 已统一小写（见 scripts/sync-php-versions.mjs 的
+# publishedTag），历史上推送过的大写 tag 需要显式删除 —— Docker Hub API 不支持
+# 大小写不敏感，旧 tag 会一直留在仓库里。
+#
+# 只允许手动触发，且必须输入大写 DELETE 才会执行。删除不可逆。
+
+on:
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: 'Docker Hub tag to delete (exact, case-sensitive)'
+        required: true
+        type: string
+      confirm:
+        description: 'Type DELETE to confirm'
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+jobs:
+  delete:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Confirm
+        env:
+          CONFIRM: ${{ inputs.confirm }}
+          TAG: ${{ inputs.tag }}
+        run: |
+          set -euo pipefail
+          if [ "$CONFIRM" != 'DELETE' ]; then
+            echo '::error::confirmation text mismatch, expected DELETE'
+            exit 1
+          fi
+          if [ -z "$TAG" ]; then
+            echo '::error::tag is empty'
+            exit 1
+          fi
+          echo "will delete tag: $TAG"
+
+      - name: Delete tag
+        env:
+          DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+          DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
+          TAG: ${{ inputs.tag }}
+        run: |
+          set -euo pipefail
+          repo="${DOCKERHUB_USERNAME}/laravel-docker"
+          base="https://hub.docker.com/v2/repositories/${repo}/tags"
+
+          payload=$(printf '{"username":"%s","password":"%s"}' \
+            "$DOCKERHUB_USERNAME" "$DOCKERHUB_TOKEN")
+
+          jwt=$(curl -fsSL -X POST https://hub.docker.com/v2/users/login \
+            -H 'Content-Type: application/json' \
+            -d "$payload" \
+            | python3 -c 'import json,sys;print(json.load(sys.stdin)["token"])')
+
+          # 删除前确认小写版本已存在，避免把一个仍有用户依赖的 tag 删空。
+          lower=$(printf '%s' "$TAG" | tr '[:upper:]' '[:lower:]')
+          if [ "$lower" != "$TAG" ]; then
+            code=$(curl -s -o /dev/null -w '%{http_code}' \
+              -H "Authorization: Bearer $jwt" "${base}/${lower}/")
+            echo "lowercase twin ${lower}: HTTP ${code}"
+            if [ "$code" != '200' ]; then
+              echo "::error::小写 tag ${lower} 不存在，拒绝删除 ${TAG}"
+              exit 1
+            fi
+          fi
+
+          code=$(curl -s -o /dev/null -w '%{http_code}' -X DELETE \
+            -H "Authorization: Bearer $jwt" "${base}/${TAG}/")
+          echo "DELETE ${TAG} -> HTTP ${code}"
+
+          case "$code" in
+            202|204) echo "✅ 已删除 ${TAG}" ;;
+            404)     echo "::warning::${TAG} 不存在（可能已删除）" ;;
+            *)       echo "::error::删除失败，HTTP ${code}"; exit 1 ;;
+          esac
