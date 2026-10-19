@@ -1,8 +1,9 @@
 name: Build and publish packages
 
 # 版本矩阵来自 versions.json（由 sync-php.yml 维护），push 到 master 时发布镜像。
-# 同一个 dir 下的多个 tag（如 latest / stable / 8.5.11）会复用 buildx 的 gha 缓存，
-# 只有第一项真正执行编译，其余项命中缓存后只需重新导出层。
+# 每个 dir 只构建一次，同一次构建直接推送该 dir 的全部 tag（latest / stable / 8.5.11）。
+# 不加 concurrency：一次全量构建要 30+ 分钟，若设置 concurrency group，
+# 队列中的 run 会被后续 push 取代而取消，导致某些版本永远发布不出去。
 
 on:
   push:
@@ -13,10 +14,6 @@ on:
 permissions:
   contents: read
   packages: write
-
-concurrency:
-  group: packages
-  cancel-in-progress: false
 
 env:
   IMAGE: curder/laravel-docker
