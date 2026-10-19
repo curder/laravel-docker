@@ -1,7 +1,7 @@
 name: Verify
 
 # PR 门禁：版本一致性 + Dockerfile 静态检查 + 镜像冒烟。
-# sync-php.yml 打开的 PR 必须等 consistency / smoke 通过才会被自动合并。
+# 分支保护只要求 `verify` 这一个聚合 check，矩阵内部增删版本都不会影响保护规则。
 
 on:
   pull_request:
@@ -16,7 +16,6 @@ concurrency:
 
 jobs:
   consistency:
-    name: consistency
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
@@ -33,10 +32,11 @@ jobs:
         run: yarn sync:check
 
       - name: Lint Dockerfiles
-        uses: hadolint/hadolint-action@v3
+        uses: hadolint/hadolint-action@v3.5.0
         with:
           dockerfile: '**/Dockerfile'
           recursive: true
+          config: .hadolint.yaml
 
       - name: Lint Markdown
         run: |
@@ -46,7 +46,6 @@ jobs:
           yarn lint:md
 
   smoke:
-    name: smoke
     runs-on: ubuntu-latest
     timeout-minutes: 40
     strategy:
@@ -98,3 +97,27 @@ jobs:
           docker run --rm "$image" phpcs --version
           docker run --rm "$image" pint --version
           docker run --rm "$image" node --version
+
+  # 聚合门禁：分支保护只认这一个 check，避免矩阵 job 改名后保护失效。
+  verify:
+    name: verify
+    if: always()
+    needs:
+      - consistency
+      - smoke
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Check upstream results
+        env:
+          CONSISTENCY: ${{ needs.consistency.result }}
+          SMOKE: ${{ needs.smoke.result }}
+        run: |
+          set -euo pipefail
+          echo "consistency: $CONSISTENCY"
+          echo "smoke: $SMOKE"
+
+          if [ "$CONSISTENCY" != "success" ] || [ "$SMOKE" != "success" ]; then
+            echo "::error::上游检查未全部通过"
+            exit 1
+          fi

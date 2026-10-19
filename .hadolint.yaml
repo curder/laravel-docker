@@ -1,0 +1,9 @@
+---
+# hadolint 配置
+# 文档：https://github.com/hadolint/hadolint#configure
+
+ignored:
+  # DL3018: apk add 未固定版本
+  # 这是刻意为之：本镜像是通用基础镜像，依赖 Alpine 的滚动安全更新，
+  # 锁定 apk 版本会导致 Alpine 发新版后构建直接失败。
+  - DL3018
