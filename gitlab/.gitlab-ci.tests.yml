@@ -1,4 +1,9 @@
-image: curder/laravel-docker:latest
+# Example GitLab CI pipeline: code style + test suite only.
+# Copy this file into your Laravel project as `.gitlab-ci.yml`.
+image: curder/laravel-docker:stable
+
+stages:
+  - test
 
 cache:
   key: ${CI_COMMIT_REF_SLUG}
@@ -7,14 +12,17 @@ cache:
 
 codestyle:
   stage: test
+  # phpcs comes from the image, so this job needs neither vendor/ nor the cache.
   cache: {}
   script:
-    - phpcs --standard=PSR2 --extensions=php app
-    
+    # PSR-2 was superseded by PSR-12 in 2019; phpcs 3.x ships PSR12.
+    - phpcs --standard=PSR12 --extensions=php app
+
 phpunit:
   stage: test
   script:
     - composer install --prefer-dist --no-ansi --no-interaction --no-progress --no-scripts
     - cp .env.example .env
     - php artisan key:generate
+    # The image bundles pcov, which produces coverage much faster than xdebug.
     - phpunit --coverage-text --colors=never

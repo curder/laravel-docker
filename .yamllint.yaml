@@ -1,0 +1,40 @@
+#
+# yamllint configuration.
+# Docs: https://yamllint.readthedocs.io/en/stable/configuration.html
+#
+# Scope: GitHub Actions workflows (.github/workflows) and the GitLab CI
+# examples in gitlab/. Those files are YAML consumed by CI providers, not
+# general configuration, so a few defaults are relaxed deliberately.
+
+extends: default
+
+rules:
+  # Neither GitHub Actions nor the GitLab examples use a leading `---`.
+  document-start: disable
+
+  # GitHub Actions uses the bare key `on:`, which YAML 1.1 parses as boolean
+  # true. Requiring [true, false] here would flag every workflow file.
+  truthy:
+    allowed-values: ['true', 'false', 'on']
+    check-keys: false
+
+  # Shell one-liners (composer install flags, phpcs paths) exceed 80 columns.
+  # Keep a ceiling so real runaway lines are still caught.
+  # Note: line-length has no per-rule `ignore` option in yamllint, so don't
+  # try to exempt comment lines here — use the top-level `ignore` below.
+  line-length:
+    max: 100
+    allow-non-breakable-words: true
+
+  # Comment indentation is stylistic and conflicts with the way block scalars
+  # are written in these files.
+  comments-indentation: disable
+
+  # Block scalars used for shell snippets are intentionally unindented content.
+  # Only the CI-facing YAML is checked. The other YAML files in the repo are
+  # linter configs with long documentation comments, which are not worth
+  # reformatting to satisfy a line-length rule.
+  indentation:
+    spaces: consistent
+    indent-sequences: whatever
+    check-multi-line-strings: false

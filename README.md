@@ -75,5 +75,15 @@ For Apple Silicon or other arm-based CPUs, use the `--platform linux/arm64` opti
 
 ### Use within your GitLab's pipelines
 
+Copy-ready examples live in [`gitlab/`](gitlab/):
+
+- [`gitlab/.gitlab-ci.tests.yml`](gitlab/.gitlab-ci.tests.yml) — code style + test suite
+- [`gitlab/.gitlab-ci.deployments.yml`](gitlab/.gitlab-ci.deployments.yml) — build, test and deploy
+
+Both target the `stable` tag and assume you copy them into your Laravel project as
+`.gitlab-ci.yml`.
+
+Background reading:
+
 - [Run test suite and check code style](http://lorisleiva.com/using-gitlabs-pipeline-with-laravel/)
 - [Build, test and deploy your Laravel application](http://lorisleiva.com/laravel-deployment-using-gitlab-pipelines/)
