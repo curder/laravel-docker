@@ -51,6 +51,15 @@ jobs:
           yarn install --frozen-lockfile
           yarn lint:md
 
+      # gitlab/ 下的示例不被其他任何检查覆盖：它们既不是 Dockerfile，也不在
+      # GitHub Actions 的运行路径上，很容易随生态演进悄悄写成过时写法。
+      - name: Lint YAML
+        run: |
+          set -euo pipefail
+          python3 -m pip install --quiet --disable-pip-version-check \
+            yamllint==1.37.1
+          yamllint --strict .github/workflows/ gitlab/ .yamllint.yaml
+
       # Commit subjects and PR titles must stay English: release tooling and CI
       # logs assume ASCII, and mixed scripts make the log hard to scan.
       # PR title 也要查：本仓库用 squash 合并，落地后的 subject 就是 PR 标题。

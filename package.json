@@ -8,6 +8,7 @@
   "scripts": {
     "fix": "npx markdownlint-cli2 --config .markdownlint-cli2.yaml --fix",
     "lint:md": "npx markdownlint-cli2 --config .markdownlint-cli2.yaml",
+    "lint:yaml": "yamllint --strict .github/workflows/ gitlab/ .yamllint.yaml",
     "sync": "node scripts/sync-php-versions.mjs",
     "sync:check": "node scripts/sync-php-versions.mjs --check",
     "sync:write": "node scripts/sync-php-versions.mjs --write"

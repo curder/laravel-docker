@@ -1,22 +1,34 @@
-image: curder/laravel-docker:latest
+# Example GitLab CI pipeline: build, test and deploy a Laravel application.
+# Copy this file into your Laravel project as `.gitlab-ci.yml`.
+image: curder/laravel-docker:stable
 
+stages:
+  - build
+  - test
+  - deploy
+
+# SSH agent setup, shared by the deploy jobs.
 .init_ssh: &init_ssh |
   eval $(ssh-agent -s)
+  if [ -z "${SSH_PRIVATE_KEY:-}" ]; then
+    echo "SSH_PRIVATE_KEY is not set" >&2
+    exit 1
+  fi
   echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add - > /dev/null
   mkdir -p ~/.ssh
   chmod 700 ~/.ssh
-  [[ -f /.dockerenv ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config
+  # Prefer pinning the host key over disabling verification:
+  #   ssh-keyscan yourdomain.com >> ~/.ssh/known_hosts
+  #   chmod 644 ~/.ssh/known_hosts
+  # Disabling verification makes the deploy vulnerable to MITM, so only do it
+  # for throwaway environments.
+  ssh-keyscan yourdomain.com >> ~/.ssh/known_hosts
+  chmod 644 ~/.ssh/known_hosts
 
-# Replace the last line with the following lines if you'd rather
-# leave StrictHostKeyChecking enabled (replace yourdomain.com):
-#
-#  ssh-keyscan yourdomain.com >> ~/.ssh/known_hosts
-#  chmod 644 ~/.ssh/known_hosts
-  
 .change_file_permissions: &change_file_permissions |
-  find . -type f -not -path "./vendor/*" -exec chmod 664 {} \;    
+  find . -type f -not -path "./vendor/*" -exec chmod 664 {} \;
   find . -type d -not -path "./vendor/*" -exec chmod 775 {} \;
-    
+
 composer:
   stage: build
   cache:
@@ -24,11 +36,13 @@ composer:
     paths:
       - vendor/
   script:
-      - composer install --prefer-dist --no-ansi --no-interaction --no-progress --no-scripts
-      - cp .env.example .env
-      - php artisan key:generate
+    - composer install --prefer-dist --no-ansi --no-interaction --no-progress --no-scripts
+    - cp .env.example .env
+    - php artisan key:generate
+  # vendor/ and .env are build outputs, not long-lived artifacts: pass them to
+  # later jobs through the cache instead of 1-month artifacts.
   artifacts:
-    expire_in: 1 month
+    expire_in: 1 day
     paths:
       - vendor/
       - .env
@@ -40,21 +54,26 @@ npm:
     paths:
       - node_modules/
   script:
-      - npm install
-      - npm run production
+    # Pick the line matching your frontend toolchain:
+    #   Laravel 9+ / Vite  -> npm run build
+    #   Laravel 8 / Mix    -> npm run production
+    - npm ci
+    - npm run build
   artifacts:
-    expire_in: 1 month
+    expire_in: 1 week
     paths:
-      - node_modules/
-      - public/css/
-      - public/js/
+      - public/build/
+      # For Laravel Mix projects use public/css/ and public/js/ instead.
 
 codestyle:
   stage: test
   dependencies: []
   script:
-    - phpcs --standard=PSR2 --extensions=php --ignore=app/Support/helpers.php app
-    
+    # helphelpers.php 不是类文件，跳过它
+    - >-
+      phpcs --standard=PSR12 --extensions=php
+      --ignore=app/Support/helpers.php app
+
 phpunit:
   stage: test
   dependencies:
@@ -71,9 +90,9 @@ staging:
   environment:
     name: staging
     url: http://dev.yourdomain.com
-  only:
-    - master
-  
+  rules:
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+
 production:
   stage: deploy
   script:
@@ -83,6 +102,7 @@ production:
   environment:
     name: production
     url: http://yourdomain.com
-  when: manual
-  only:
-   - master
+  rules:
+    # Keep production a manual gate, as before.
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+      when: manual
