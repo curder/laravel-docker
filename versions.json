@@ -1,39 +1,39 @@
 [
   {
     "php": "8.5",
-    "version": "8.5.11",
+    "version": "8.5.12",
     "dir": "8.5",
     "tags": [
       "latest",
       "stable",
-      "8.5.11"
+      "8.5.12"
     ],
     "trackRc": false
   },
   {
     "php": "8.4",
-    "version": "8.4.27RC1",
+    "version": "8.4.27",
     "dir": "8.4",
     "tags": [
-      "8.4.27rc1"
+      "8.4.27"
     ],
     "trackRc": true
   },
   {
     "php": "8.3",
-    "version": "8.3.35",
+    "version": "8.3.36",
     "dir": "8.3",
     "tags": [
-      "8.3.35"
+      "8.3.36"
     ],
     "trackRc": true
   },
   {
     "php": "8.2",
-    "version": "8.2.34",
+    "version": "8.2.35",
     "dir": "eol/8.2",
     "tags": [
-      "8.2.34"
+      "8.2.35"
     ],
     "trackRc": true
   },
