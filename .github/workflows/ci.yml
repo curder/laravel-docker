@@ -128,17 +128,37 @@ jobs:
             dir: '8.5'
             autotools: true
             pcov: true
+            pint: true
           - php: '8.4'
             dir: '8.4'
             autotools: true
             pcov: true
+            pint: true
           - php: '8.3'
             dir: '8.3'
             autotools: true
             pcov: true
+            pint: true
           # eol/8.2 未带 autotools / pcov，标记缺省，断言会自动跳过。
           - php: '8.2'
             dir: 'eol/8.2'
+            pint: true
+          # EOL 分支以前只在 push 到 master 时被构建，坏了没人知道：2026-10 就因
+          # 基础镜像自带的 PEAR 读不动 pecl.php.net 的 channel.xml，7.1~7.4 与
+          # 8.1 全部构建失败，而 PR 门禁一直是绿的。
+          - php: '8.1'
+            dir: 'eol/8.1'
+            pint: true
+          - php: '8.0'
+            dir: 'eol/8.0'
+          - php: '7.4'
+            dir: 'eol/7.4'
+          - php: '7.3'
+            dir: 'eol/7.3'
+          - php: '7.2'
+            dir: 'eol/7.2'
+          - php: '7.1'
+            dir: 'eol/7.1'
     steps:
       - name: Checkout
         uses: actions/checkout@v7.0.1
@@ -187,7 +207,10 @@ jobs:
           image=smoke:${{ matrix.php }}
           docker run --rm "$image" composer --version
           docker run --rm "$image" phpcs --version
-          docker run --rm "$image" pint --version
+          # Laravel Pint 需要 PHP >= 8.1，7.x 与 8.0 只装了 phpcs。
+          if [ "${{ matrix.pint }}" = 'true' ]; then
+            docker run --rm "$image" pint --version
+          fi
           docker run --rm "$image" node --version
 
       # 只有 8.3/8.4/8.5 自带 GNU Autotools（供构建期编译 gifsicle 等原生模块，

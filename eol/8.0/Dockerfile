@@ -26,6 +26,14 @@ RUN apk add --no-cache \
     rsync \
     zlib-dev
 
+# 基础镜像自带的 PEAR (1.10.13) 太旧，解析不了 pecl.php.net 当前的 channel.xml，
+# `pecl channel-update` 报 "XML Error"。这里用 `*-stable` 恰好绕过了 channel
+# 才没爆，换成裸 name 就会报 "No releases available"。
+# 升级到 1.10.18（8.2+ 官方镜像自带该版本）后不再靠运气。
+RUN curl -fsSL https://pear.php.net/go-pear.phar -o /tmp/go-pear.phar \
+    && php /tmp/go-pear.phar -y > /dev/null \
+    && rm -f /tmp/go-pear.phar
+
 # Install php extensions
 RUN chmod +x /usr/local/bin/install-php-extensions && \
     install-php-extensions \

@@ -26,6 +26,14 @@ RUN apk add --no-cache \
     rsync \
     zlib-dev
 
+# 基础镜像自带的 PEAR (1.10.13) 太旧：pecl.php.net 现在只提供 REST1.0/1.1 的
+# channel.xml，旧客户端解析失败，`pecl channel-update` 报 XML Error，接着装
+# imagick 会报 "does not have REST xml available"。
+# 升级到 1.10.18（8.2+ 官方镜像自带该版本）后恢复。
+RUN curl -fsSL https://pear.php.net/go-pear.phar -o /tmp/go-pear.phar \
+    && php /tmp/go-pear.phar -y > /dev/null \
+    && rm -f /tmp/go-pear.phar
+
 # Install php extensions
 RUN chmod +x /usr/local/bin/install-php-extensions && \
     install-php-extensions \
