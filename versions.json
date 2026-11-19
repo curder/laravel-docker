@@ -12,28 +12,28 @@
   },
   {
     "php": "8.4",
-    "version": "8.4.28RC1",
+    "version": "8.4.28",
     "dir": "8.4",
     "tags": [
-      "8.4.28rc1"
+      "8.4.28"
     ],
     "trackRc": true
   },
   {
     "php": "8.3",
-    "version": "8.3.36",
+    "version": "8.3.37",
     "dir": "8.3",
     "tags": [
-      "8.3.36"
+      "8.3.37"
     ],
     "trackRc": true
   },
   {
     "php": "8.2",
-    "version": "8.2.35",
+    "version": "8.2.36",
     "dir": "eol/8.2",
     "tags": [
-      "8.2.35"
+      "8.2.36"
     ],
     "trackRc": true
   },
