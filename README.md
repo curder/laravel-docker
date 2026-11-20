@@ -10,7 +10,7 @@
 |--------|-------------|:-------------|----------------------------------------------------------------------------------------------------------|
 | 8.3.37 | 8.3.37      | amd64/arm64  | ✅ Everything                                                                                            |
 | 8.4.28    | 8.4.28      | amd64/arm64  | ✅ Everything                                                                                            |
-| 8.5.12 | 8.5.12      | amd64/arm64  | ✅ Everything                                                                                            |
+| 8.5.13 | 8.5.13      | amd64/arm64  | ✅ Everything                                                                                            |
 | stable | **8.5**     | amd64/arm64  | 🔗 Aliases the stable version of PHP that supports all features of this docker image.                    |
 | latest | **8.5**     | amd64/arm64  | 🔗 Aliases the latest version of PHP available (even if that version does not support all features yet). |
 
