@@ -1,0 +1,76 @@
+name: Dependabot auto-merge
+
+# dependabot 的 patch / minor 升级在 `verify` 通过后自动 squash 合并。
+# major 升级不自动合并：升级说明需要人工确认，留给 reviewer。
+#
+# 用 pull_request_target 的原因：
+#   1. dependabot 触发的 pull_request 事件拿不到 secrets，App/PAT token 会是空值；
+#   2. 本 job 不 checkout、不执行 PR 里的任何代码，只用事件元数据。
+# 用 bot token 而不是 GITHUB_TOKEN 的原因：
+#   GITHUB_TOKEN 产生的 push 不会触发 packages.yml，镜像不会重建。
+
+on:
+  pull_request_target:
+    types: [opened, reopened, synchronize]
+
+permissions:
+  contents: read
+
+jobs:
+  auto-merge:
+    if: github.event.pull_request.user.login == 'dependabot[bot]'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - name: Create GitHub App token
+        id: app
+        if: vars.APP_ID != ''
+        uses: actions/create-github-app-token@v3.3.0
+        with:
+          app-id: ${{ vars.APP_ID }}
+          private-key: ${{ secrets.APP_PRIVATE_KEY }}
+
+      - name: Resolve bot token
+        id: bot
+        env:
+          APP_TOKEN: ${{ steps.app.outputs.token }}
+          PAT_TOKEN: ${{ secrets.BOT_TOKEN || secrets.TOKEN }}
+        run: |
+          set -euo pipefail
+          token="${APP_TOKEN:-$PAT_TOKEN}"
+          if [ -z "$token" ]; then
+            echo '::error::缺少 bot token：请配置 APP_ID/APP_PRIVATE_KEY，或 BOT_TOKEN/TOKEN'
+            exit 1
+          fi
+          echo "token=${token}" >> "$GITHUB_OUTPUT"
+
+      - name: Dependabot metadata
+        id: meta
+        uses: dependabot/fetch-metadata@v2
+        with:
+          github-token: ${{ steps.bot.outputs.token }}
+
+      - name: Enable auto-merge (squash)
+        if: steps.meta.outputs.update-type != 'version-update:semver-major'
+        env:
+          GH_TOKEN: ${{ steps.bot.outputs.token }}
+          PR_URL: ${{ github.event.pull_request.html_url }}
+          # PR 标题由 dependabot 生成，已经是英文；正文留空，保持 subject 单行
+          SUBJECT: ${{ github.event.pull_request.title }}
+        run: |
+          set -euo pipefail
+          echo "升级类型：${{ steps.meta.outputs.update-type }}"
+          gh pr merge "$PR_URL" --squash --auto --subject "$SUBJECT" --body ""
+
+      - name: Summarize
+        if: always()
+        env:
+          UPDATE_TYPE: ${{ steps.meta.outputs.update-type }}
+          PR_URL: ${{ github.event.pull_request.html_url }}
+        run: |
+          {
+            echo '## Dependabot auto-merge'
+            echo "- PR：${PR_URL}"
+            echo "- 升级类型：\`${UPDATE_TYPE:-unknown}\`"
+          } >> "$GITHUB_STEP_SUMMARY"
