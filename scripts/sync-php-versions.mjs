@@ -165,28 +165,85 @@ async function hub(query, tries = 3) {
   throw lastError ?? new Error('Docker Hub 请求失败');
 }
 
-/** 一次请求拿到最近推送的所有纯 alpine tag，按分支降序排出候选版本 */
-async function latestPerBranch() {
-  const data = await hub(`page_size=100&name=${ALPINE_SUFFIX}&ordering=last_updated`);
-  const branches = new Map();
+const MAX_BRANCH_PAGES = 5;
 
-  for (const tag of data.results ?? []) {
+/** 从一页 tag 结果里解析出纯 alpine 候选版本 */
+function parsePlainTags(results) {
+  const candidates = [];
+  for (const tag of results ?? []) {
     const matched = tag.name.match(PLAIN_TAG);
     if (!matched) continue;
 
     const [, major, minor, patch, , rc] = matched;
-    const branch = `${major}.${minor}`;
-    const candidate = {
+    candidates.push({
+      branch: `${major}.${minor}`,
       version: tag.name.slice(0, -ALPINE_SUFFIX.length),
       rank: [Number(patch), rc ? Number(rc) : Infinity],
-    };
+    });
+  }
+  return candidates;
+}
 
-    if (!branches.has(branch)) branches.set(branch, []);
-    branches.get(branch).push(candidate);
+/**
+ * 分页拉取某个 name 过滤下的纯 alpine tag。
+ *
+ * Docker Hub 的 name 是模糊匹配：`name=8.5.` 会同时返回 fpm/cli/zts 等变体，
+ * 一次大版本发布（如 8.6.0）短时间内能产出上百个 tag，把旧 patch 挤出前
+ * 100 条。因此默认只取第一页，需要时用 `pages` 继续翻。
+ */
+async function fetchCandidates(query, { pages = 1, enough } = {}) {
+  const found = new Map();
+  for (let page = 1; page <= pages; page += 1) {
+    const data = await hub(`${query}&page=${page}`);
+    const results = data.results ?? [];
+    for (const candidate of parsePlainTags(results)) {
+      if (!found.has(candidate.version)) found.set(candidate.version, candidate);
+    }
+    // 不足一页说明已经到底；候选足够时不再翻旧 patch
+    if (results.length < 100) break;
+    if (enough && enough([...found.values()])) break;
+  }
+  return [...found.values()];
+}
+
+/**
+ * 按分支收集候选版本，降序排列。
+ *
+ * 1. 最近窗口（全局 `-alpine` 第一页）：用于发现上游新增分支，新分支首次发版
+ *    一定出现在最近推送里。该列表不完整，只用来提醒人工加目录。
+ * 2. 已管理分支：按 `8.5.` 前缀单独翻页，避免被大版本发布挤出的旧 tag 漏掉
+ *    （2026-11 的 8.5.13 就因此没被发现）。
+ */
+async function latestPerBranch(entries) {
+  const branches = new Map();
+  const add = (candidate) => {
+    if (!branches.has(candidate.branch)) branches.set(candidate.branch, []);
+    branches.get(candidate.branch).push(candidate);
+  };
+
+  const recent = await fetchCandidates(
+    `page_size=100&name=${ALPINE_SUFFIX}&ordering=last_updated`,
+  );
+  recent.forEach(add);
+
+  for (const entry of entries) {
+    const candidates = await fetchCandidates(
+      `page_size=100&name=${encodeURIComponent(`${entry.php}.`)}&ordering=last_updated`,
+      {
+        pages: MAX_BRANCH_PAGES,
+        // 同一分支拿到两个正式版就足以判定最优候选
+        enough: (list) => list.filter((item) => !IS_RC.test(item.version)).length >= 2,
+      },
+    );
+    candidates.forEach(add);
   }
 
-  for (const candidates of branches.values()) {
-    candidates.sort((a, b) => compareRank(b.rank, a.rank)); // 降序：最优候选在前
+  for (const [branch, candidates] of branches) {
+    const unique = new Map(candidates.map((candidate) => [candidate.version, candidate]));
+    branches.set(
+      branch,
+      [...unique.values()].sort((a, b) => compareRank(b.rank, a.rank)), // 降序：最优候选在前
+    );
   }
   return branches;
 }
@@ -273,7 +330,7 @@ async function runSync() {
   const readmePath = join(ROOT, 'README.md');
   let readme = readFileSync(readmePath, 'utf8');
 
-  const branches = await latestPerBranch();
+  const branches = await latestPerBranch(entries);
   const entriesByBranch = new Map(entries.map((entry) => [entry.php, entry]));
   const plans = [];
   const unmanaged = [];
