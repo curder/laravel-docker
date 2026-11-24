@@ -42,7 +42,7 @@ jobs:
       - name: Create GitHub App token
         id: app
         if: vars.APP_ID != ''
-        uses: actions/create-github-app-token@v3.3.0
+        uses: actions/create-github-app-token@v3.4.0
         with:
           app-id: ${{ vars.APP_ID }}
           private-key: ${{ secrets.APP_PRIVATE_KEY }}
