@@ -26,7 +26,7 @@ jobs:
       - name: Create GitHub App token
         id: app
         if: vars.APP_ID != ''
-        uses: actions/create-github-app-token@v3.3.0
+        uses: actions/create-github-app-token@v3.4.0
         with:
           app-id: ${{ vars.APP_ID }}
           private-key: ${{ secrets.APP_PRIVATE_KEY }}
@@ -47,7 +47,7 @@ jobs:
 
       - name: Dependabot metadata
         id: meta
-        uses: dependabot/fetch-metadata@v2
+        uses: dependabot/fetch-metadata@v3
         with:
           github-token: ${{ steps.bot.outputs.token }}
 
